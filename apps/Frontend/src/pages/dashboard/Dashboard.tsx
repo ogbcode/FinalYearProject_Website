@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
@@ -7,9 +7,9 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import TrafficIcon from "@mui/icons-material/Traffic";
 import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
-import GeographyChart from "../../components/GeographyChart";
-import BarChart from "../../components/BarChart";
+import LineChart from "../../components/Linechart";
+// import GeographyChart from "../../components/Geographychart";
+import BarChart from "../../components/Barchart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 
@@ -36,10 +36,12 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            backgroundColor: colors.primary[400],
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <StatBox
             title="12,361"
@@ -55,10 +57,12 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            backgroundColor: colors.primary[400],
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <StatBox
             title="431,225"
@@ -74,10 +78,12 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            backgroundColor: colors.primary[400],
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <StatBox
             title="32,441"
@@ -93,10 +99,12 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
-          backgroundColor={colors.primary[400]}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+          sx={{
+            backgroundColor: colors.primary[400],
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <StatBox
             title="1,325,134"
@@ -115,7 +123,9 @@ const Dashboard = () => {
         <Box
           gridColumn="span 8"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          sx={{
+            backgroundColor: colors.primary[400],
+          }}
         >
           <Box
             mt="25px"
@@ -154,18 +164,20 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 4"
-          p="30x"
+          p="30px" // Fixed the typo from "30x" to "30px"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-          height="39rem"
+          sx={{
+            backgroundColor: colors.primary[400],
+            overflow: "auto",
+            height: "39rem",
+          }}
         >
           <Box
             display="flex"
             justifyContent="space-between"
             alignItems="center"
             borderBottom={`6px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
+            color={colors.grey[100]}
             p="18px"
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
@@ -198,7 +210,9 @@ const Dashboard = () => {
               </Box>
               <Box color={colors.grey[100]}>{transaction.date}</Box>
               <Box
-                backgroundColor={colors.greenAccent[500]}
+                sx={{
+                  backgroundColor: colors.primary[400],
+                }}
                 p="5px 10px"
                 borderRadius="4px"
               >
@@ -212,8 +226,10 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
           p="30px"
+          sx={{
+            backgroundColor: colors.primary[400],
+          }}
         >
           <Typography variant="h5" fontWeight="600">
             Campaign
@@ -238,7 +254,9 @@ const Dashboard = () => {
         <Box
           gridColumn="span 4"
           gridRow="span 2"
-          backgroundColor={colors.primary[400]}
+          sx={{
+            backgroundColor: colors.primary[400],
+          }}
         >
           <Typography
             variant="h5"

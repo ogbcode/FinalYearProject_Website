@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridAlignment, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
@@ -22,8 +22,8 @@ const Customers = () => {
       field: "age",
       headerName: "Age",
       type: "number",
-      headerAlign: "left",
-      align: "left",
+      headerAlign: "left"  as GridAlignment,
+      align: "left" as GridAlignment
     },
     {
       field: "phone",
