@@ -3,14 +3,14 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ColorModeContext, useMode } from './theme';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import Topbar from './pages/global/Topbar';
-import Dashboard from './pages/dashboard/Dashboard' ;
+import Dashboard from 'src/pages/dashboard/Dashboard' ;
 import Login from './pages/login/Login';
 import Sales from './pages/sales/Sales';
 import Sidebar from './pages/global/Sidebar';
 import Deploy from './pages/deploy/deploy';
 import FAQ from './pages/faq/faq';
 import Geography from './pages/geography/geography';
-import Customers from './pages/customer/Customer';
+import Customers from 'src/pages/customer/Customer';
 function App() {
   const [theme, colorMode] = useMode();
 
