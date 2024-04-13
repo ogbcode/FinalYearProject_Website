@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,9 +8,10 @@ import { UsersService } from '../users/users.service';
 import { error } from 'console';
 import { User } from '../users/entities/user.entity';
 import { encryptionService } from 'src/utils/encryption';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { FastifyLoader } from '@nestjs/serve-static';
 import { DeploymentsService } from '../deployments/deployments.service';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class BotService {
@@ -22,7 +23,14 @@ export class BotService {
     private readonly deploymentService: DeploymentsService,
 
   ) {}
-
+  async createHash(botId: string): Promise<string> {
+    const token='ChidubemRailway234'
+    const combinedString =botId+token;; // Combine userId and botId
+    const hash = crypto.createHash('sha256');
+    hash.update(combinedString);
+    return hash.digest('hex');
+  }
+  
   async generateRandomString(): Promise<string> {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
@@ -107,10 +115,14 @@ export class BotService {
     }
     return bot;
   }
-  async sendData(id){
+  async sendData(id,token){
     const bot=await this.findOne(id)
     if (!bot){
       throw new NotFoundException("Bot Not found")
+    }
+
+    if (token !== await this.createHash(id)) {
+      throw new UnauthorizedException("Invalid token");
     }
     
     const botDomain=await this.deploymentService.findOne(bot.deployment.id)

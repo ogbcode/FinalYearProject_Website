@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Version, UsePipes } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpStatus, HttpCode, Version, UsePipes, Headers } from '@nestjs/common';
 import { BotService } from './bot.service';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { UpdateBotDto } from './dto/update-bot.dto';
@@ -37,9 +37,10 @@ export class BotController {
 @Get("data/:id")
 @ApiOperation({ summary: 'Send the bot the relevant data it needs to start' })
 @ApiResponse({ status: HttpStatus.OK, description: 'Send the bot its data',  })
-async sendData(@Param("id") id: string): Promise<Object> {
+
+async sendData(@Param("id") id: string,@Headers('Authorization') token: string): Promise<Object> {
   try {
-    return await this.botService.sendData(id);
+    return await this.botService.sendData(id,token);
   } catch (error) {
     throw new Error(`Failed to fetch bot: ${error.message}`);
   }
