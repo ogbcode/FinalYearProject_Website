@@ -15,18 +15,18 @@ export class TransactionsService {
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto): Promise<Transaction> {
-    const transaction=await this.transactionRepository.findOneBy({transactionId:createTransactionDto.transactionId})
+    const transaction=await this.transactionRepository.findOne({where:{transactionId:createTransactionDto.transactionId}})
     if (transaction) {
       throw new Error("transaction already exists");
     }
 
-    const customer= await this.Customerservice.findOne(
-      createTransactionDto.customerId
+    const customer= await this.Customerservice.findOneByTelegramId(
+      createTransactionDto.telegramId,createTransactionDto.botId
     )
 
     if (!customer) {
       throw new Error(
-        `customer with id ${createTransactionDto.customerId} does not exist`,
+        `customer with does not exist`,
       );
     }
     const transactionProps = {

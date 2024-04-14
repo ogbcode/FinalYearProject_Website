@@ -22,7 +22,7 @@ export class Transaction {
     status: string;
   
     @Column()
-    amount: number;
+    amount: string;
   
     @Column()
     currency: string;
@@ -31,7 +31,7 @@ export class Transaction {
     platform: string;
   
     @Column()
-    duration: number;
+    duration: string;
   
     @ManyToOne(() => Customer, customer => customer.transaction)
     @JoinColumn()

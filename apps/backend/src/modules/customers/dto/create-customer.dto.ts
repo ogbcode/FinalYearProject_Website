@@ -8,16 +8,6 @@ export class CreateCustomerDto {
   firstName: string;
 
   @ApiProperty()
-  @IsOptional()
-  @IsString()
-  lastName?: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsString()
-  username?: string;
-
-  @ApiProperty()
   @IsNotEmpty({ message: 'Telegram ID is required' })
   @IsString()
   telegramId: string;
@@ -26,4 +16,9 @@ export class CreateCustomerDto {
   @IsString()
   @IsNotEmpty({ message: 'user ID is required' })
   userId: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: 'bot ID is required' })
+  botId: string;
 }

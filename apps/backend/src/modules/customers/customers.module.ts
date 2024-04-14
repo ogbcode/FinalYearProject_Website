@@ -5,9 +5,10 @@ import { Customer } from './entities/customer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '../users/users.module';
 import { User } from '../users/entities/user.entity';
+import { BotModule } from '../bot/bot.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Customer,User]),UsersModule],
+  imports: [TypeOrmModule.forFeature([Customer,User]),UsersModule,BotModule],
   
   controllers: [CustomersController],
   providers: [CustomersService],

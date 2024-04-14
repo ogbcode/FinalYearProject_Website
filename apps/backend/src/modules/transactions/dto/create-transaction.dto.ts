@@ -10,8 +10,8 @@ export class CreateTransactionDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  amount: number;
+  @IsString()
+  amount:string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -25,8 +25,8 @@ export class CreateTransactionDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  @IsNumber()
-  duration: number;
+  @IsString()
+  duration: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -36,6 +36,11 @@ export class CreateTransactionDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  customerId: string;
+  telegramId: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  botId: string;
 }
 

@@ -5,6 +5,7 @@ import { UsersService } from '../users/users.service';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { BotService } from '../bot/bot.service';
 
 @Injectable()
 export class CustomersService {
@@ -12,11 +13,12 @@ export class CustomersService {
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
     private readonly UserService: UsersService,
+    private readonly botService: BotService,
   ) {}
 
   async create(createCustomerDto: CreateCustomerDto): Promise<Customer> {
   const customer = await this.customerRepository.findOne({
-    where: { telegramId: createCustomerDto.telegramId, user: { id:createCustomerDto.userId} }
+    where: { telegramId: createCustomerDto.telegramId, bot: { id:createCustomerDto.botId} }
   });
   if (customer) {
       throw new Error("Customer already exists");
@@ -25,7 +27,9 @@ export class CustomersService {
     const user= await this.UserService.findOneById(
       createCustomerDto.userId
     )
-
+    const bot= await this.botService.findOne(
+      createCustomerDto.botId
+    )
     if (!user) {
       throw new Error(
         `Program with id ${createCustomerDto.userId} does not exist`,
@@ -34,6 +38,7 @@ export class CustomersService {
     const customerProps = {
       ...createCustomerDto,
       user:user,
+      bot:bot,
     };
     const new_Customer=await this.customerRepository.create(customerProps);
     return await this.customerRepository.save(new_Customer);
@@ -58,6 +63,18 @@ export class CustomersService {
 
     return customer;
   }
+
+  async findOneByTelegramId(telegramId: string,botId): Promise<Customer> {
+    const customer = await this.customerRepository.findOne({
+      where: { telegramId:telegramId,bot:{ id: botId}},
+    });
+    if (!customer) {
+      throw new NotFoundException(`Customer not found`);
+    }
+
+    return customer;
+  }
+
 
   async update(id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
     const customer = await this.customerRepository.findOne({

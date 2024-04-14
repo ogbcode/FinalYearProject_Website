@@ -9,6 +9,7 @@ import { Customer } from './entities/customer.entity';
 @ApiTags('Customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
+  
 
   @Version('1')
   @Post("create")
@@ -54,7 +55,21 @@ export class CustomersController {
       throw new Error(`Failed to find customer: ${error.message}`);
     }
   }
-
+  @Version('1')
+  @Get('/telegram/bot')
+  @ApiOperation({ summary: 'Get a customer by telgramId' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Customer found by telegramID' })
+  @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'Customer not found' })
+  async findOnebyTelegramId(@Body() body: any) {
+    try {
+      const id=body.telegramId
+      const botId=body.botId
+      const customer = await this.customersService.findOneByTelegramId(id,botId);
+      return customer;
+    } catch (error) {
+      throw new Error(`Failed to find customer: ${error.message}`);
+    }
+  }
   @Version('1')
   @Patch(':id')
   @ApiOperation({ summary: 'Update a customer by ID' })
