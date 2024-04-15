@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, getConnection } from 'typeorm';
 import { UsersService } from '../users/users.service';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -44,14 +44,37 @@ export class CustomersService {
     return await this.customerRepository.save(new_Customer);
   }
 
-  async findAll(userId:string): Promise<Customer[]> {
-    const customer= await this.customerRepository.find({where:{user:{id:userId}}});
+  async findAll(userId:string): Promise<any> {
+    const customer= await this.customerRepository.find({where:{user:{id:userId}},relations: ['bot']});
     if(!customer){
       throw new Error("No Customers found")
     }
-    return customer
+    const modifiedCustomers = customer.map(customer => ({
+      id: customer.id,
+      firstName: customer.firstName,
+      telegramId: customer.telegramId,
+      createdAt:customer.createdAt,
+      updatedAt: customer.updatedAt,
+      botName: customer.bot ? customer.bot.name : null, // Assuming botId can be null if bot is not present
+    }));
+  
+    return modifiedCustomers;
   }
 
+  async findAllForBroadcast(botId:string):Promise<any>{
+    const customer= await this.customerRepository.find({where:{bot:{ id: botId}}});
+    if(!customer){
+      throw new Error("No Customers found")
+    }
+    const query =await this.customerRepository
+    .createQueryBuilder("customer")
+    .select("customer.telegramId")
+    .where("customer.botId = :botId", { botId:botId})
+    .getRawMany();
+  
+  return query
+  }
+  
   async findOne(id: string): Promise<Customer> {
     const customer = await this.customerRepository.findOne({
       where: { id },

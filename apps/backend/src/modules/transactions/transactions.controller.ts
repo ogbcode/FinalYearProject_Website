@@ -32,15 +32,32 @@ export class TransactionsController {
     type: Transaction,
     isArray: true,
   })
-  async findAll(@Param('id') id: string) {
+  async findAllByCustomer(@Param('id') id: string) {
     try {
-      const transactions = await this.transactionsService.findAll(id);
+      const transactions = await this.transactionsService.findAllByCustomer(id);
       return transactions;
     } catch (error) {
       throw new Error(`Failed to fetch transactions: ${error.message}`);
     }
   }
 
+  @Version('1')
+  @Get("user/:id")
+  @ApiOperation({ summary: 'Get all transactions for a customer' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of all transactionsm for a customer',
+    type: Transaction,
+    isArray: true,
+  })
+  async findAll(@Param('id') userId: string) {
+    try {
+      const transactions = await this.transactionsService.findAll(userId);
+      return transactions;
+    } catch (error) {
+      throw new Error(`Failed to fetch transactions: ${error.message}`);
+    }
+  }
   @Version('1')
   @Get(':id')
   @ApiOperation({ summary: 'Get a transaction by ID' })

@@ -11,6 +11,7 @@ import Deploy from './pages/deploy/deploy';
 import FAQ from './pages/faq/faq';
 import Geography from './pages/geography/geography';
 import Customers from './pages/customer/Customer';
+import Subscriber from './pages/subscriber/Subscriber';
 function App() {
   const [theme, colorMode] = useMode();
 
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/sales" element={<Sales />} />
                 <Route path="/geography" element={<Geography />} />
                 <Route path="/customers" element={<Customers />} />
+                <Route path="/subscribers" element={<Subscriber />} />
               </Routes>
             </main>
           </div>

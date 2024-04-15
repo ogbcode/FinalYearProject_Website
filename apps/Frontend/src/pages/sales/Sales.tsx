@@ -1,51 +1,96 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataInvoices } from "../../data/mockData";
 import Header from "../../components/Header";
-import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
+import { useEffect, useState } from "react";
 
 const Sales = () => {
   const theme = useTheme();
+  const [rows, setRows] = useState([]);
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "id", headerName: "ID" },
     {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
+      field: "transactionId",
+      headerName: "ID",
+      flex: 0.5,
       cellClassName: "name-column--cell",
     },
     {
-      field: "phone",
-      headerName: "Phone Number",
+      field: "firstName",
+      headerName: "Name",
       flex: 1,
+      valueGetter: (params: any) => params.row.customer.firstName,
     },
     {
-      field: "email",
-      headerName: "Email",
+      field: "status",
+      headerName: "Status",
       flex: 1,
     },
+
     {
-      field: "cost",
-      headerName: "Cost",
+      field: "amount",
+      headerName: "Amount",
       flex: 1,
-      renderCell: (params: { row: { cost: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }; }) => (
+      renderCell: (params: any) => (
         <Typography color={colors.greenAccent[500]}>
-          ${params.row.cost}
+          {params.row.platform === "Paystack" ? "₦" : "$"}
+          {params.value}
         </Typography>
       ),
     },
     {
-      field: "date",
+      field: "platform",
+      headerName: "Payment Method",
+      flex: 1,
+    },
+    {
+      field: "duration",
+      headerName: "plan",
+      flex: 1,
+      valueGetter: (params: any) => {
+        const duration = params.value;
+        if (duration === "14") {
+          return "2 Weeks";
+        } else if (duration === "30") {
+          return "1 Month";
+        } else {
+          return "Lifetime";
+        }
+      },
+    },
+    {
+      field: "createdAt",
       headerName: "Date",
       flex: 1,
+      valueGetter: (params: any) => {
+        const date = new Date(params.value);
+        return date.toISOString().split("T")[0];
+      },
     },
   ];
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(
+          "http://127.0.0.1:3000/backend/v1/transaction/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        // console.log(data)
+        setRows(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <Box m="20px" ml="290px">
-      <Header title="SALES" subtitle="List of Invoice Balances" />
+      <Header title="SALES" subtitle="List of sales made" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -73,9 +118,27 @@ const Sales = () => {
           "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            color: `${colors.grey[100]} !important`,
+          },
         }}
       >
-        <DataGrid checkboxSelection rows={mockDataInvoices} columns={columns} />
+        <DataGrid
+          checkboxSelection
+          rows={rows}
+          columns={columns}
+          components={{ Toolbar: GridToolbar }}
+          // footer={{
+          //   renderFooter: () => (
+          //     <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px" }}>
+          //       {/* Display the total amount in the summary row */}
+          //       <Typography variant="h6" color="primary">
+          //         Total: $1000
+          //       </Typography>
+          //     </div>
+          //   ),
+          // }}
+        />
       </Box>
     </Box>
   );

@@ -12,6 +12,7 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import InsightsIcon from '@mui/icons-material/Insights';
 import GroupIcon from '@mui/icons-material/Group';
 import PublicIcon from '@mui/icons-material/Public';
+import CardMembershipIcon from '@mui/icons-material/CardMembership';
 const Item = ({
         title,
         to,
@@ -89,7 +90,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  ADMIN
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -104,7 +105,7 @@ const Sidebar = () => {
                   alt="profile-user"
                   width="100px"
                   height="100px"
-                  src={`../../assets/US30.png`}
+                  src={`../../assets/user.png`}
                   style={{ cursor: "pointer", borderRadius: "50%" }}
                 />
               </Box>
@@ -118,7 +119,7 @@ const Sidebar = () => {
                   Ed Roh
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
-                  VP Fancy Admin
+                  ADMIN
                 </Typography>
               </Box>
             </Box>
@@ -151,6 +152,13 @@ const Sidebar = () => {
               title="Customers"
               to="/customers"
               icon={<GroupIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+              <Item
+              title="Subscribers"
+              to="/subscribers"
+              icon={<CardMembershipIcon />}
               selected={selected}
               setSelected={setSelected}
             />

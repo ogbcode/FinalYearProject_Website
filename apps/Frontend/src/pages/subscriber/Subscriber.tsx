@@ -5,7 +5,7 @@ import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const Customers = () => {
+const Subscriber = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [rows, setRows] = useState([]);
@@ -25,11 +25,49 @@ const Customers = () => {
       headerName: "TelegramId",
       flex: 1,
     },
+
     {
       field: "botName",
       headerName: "Bot",
       flex: 1,
     },
+    {
+      field: "duration",
+      headerName: "Duration",
+      flex: 1,
+      valueGetter: (params: any) => {
+          const duration = params.value;
+          return duration+" days";
+        
+      },
+    },
+    {
+      field: "joinDate",
+      headerName: "Date Joined",
+      flex: 1,
+      valueGetter: (params: any) => {
+        if (params.value) {
+          const date = new Date(params.value);
+          return date.toISOString().split("T")[0];
+        } else {
+          return ""; 
+        }
+      },
+    },
+    {
+      field: "expiryDate",
+      headerName: "Expiry Date",
+      flex: 1,
+      valueGetter: (params: any) => {
+        if (params.value) {
+          const date = new Date(params.value);
+          return date.toISOString().split("T")[0];
+        } else {
+          return ""; 
+        }
+      },
+    },
+    
     {
       field: "createdAt",
       headerName: "Date",
@@ -45,7 +83,7 @@ const Customers = () => {
     const fetchData = async () => {
       try {
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
-        const response = await fetch('http://127.0.0.1:3000/backend/v1/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb');
+        const response = await fetch('http://127.0.0.1:3000/backend/v1/subscribers/bot/b884da75-1797-4ff8-8b89-2baf7bcb3462');
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -60,10 +98,11 @@ const Customers = () => {
     fetchData();
   }, []);
   return (
-    <Box m="20px" ml="280px">
+    <Box m="20px" ml="280px"
+    >
       <Header
-        title="CUSTOMERS"
-        subtitle="List of telegram users who have used your bot"
+        title="SUBSCRIBERS"
+        subtitle="List of paid subscribers"
       />
       <Box
         m="40px 0 0 0"
@@ -108,4 +147,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Subscriber;

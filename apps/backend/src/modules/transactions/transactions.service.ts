@@ -38,8 +38,12 @@ export class TransactionsService {
 
   }
 
-  async findAll(customerId:string): Promise<Transaction[]> {
+  async findAllByCustomer(customerId:string): Promise<Transaction[]> {
     return await this.transactionRepository.find({where:{customer:{id:customerId}}});
+  }
+
+  async findAll(userId:string): Promise<Transaction[]> {
+    return await this.transactionRepository.find({where:{customer:{user:{id:userId}}},relations:["customer"]});
   }
 
   async findOne(id: string): Promise<Transaction> {

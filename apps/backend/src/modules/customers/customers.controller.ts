@@ -9,7 +9,7 @@ import { Customer } from './entities/customer.entity';
 @ApiTags('Customers')
 export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
-  
+
 
   @Version('1')
   @Post("create")
@@ -33,9 +33,29 @@ export class CustomersController {
     type: Customer,
     isArray: true,
   })
+  
   async findAll(@Param('id') id: string) {
     try {
       const customers = await this.customersService.findAll(id);
+      return customers;
+    } catch (error) {
+      throw new Error(`Failed to fetch customers: ${error.message}`);
+    }
+  }
+
+  @Version('1')
+  @Get("/telegram/id/:id")
+  @ApiOperation({ summary: 'Get all telegramId linked to a bot' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of all customer telegramid linked to a bot',
+    type: Customer,
+    isArray: true,
+  })
+  
+  async findAllForBroadcast(@Param('id') id: string) {
+    try {
+      const customers = await this.customersService.findAllForBroadcast(id);
       return customers;
     } catch (error) {
       throw new Error(`Failed to fetch customers: ${error.message}`);
