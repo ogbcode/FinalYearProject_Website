@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Headers,
   Version,
   Req,
   Res,
@@ -40,6 +41,19 @@ export class UsersController {
   async findAll() {
     return await this.usersService.findAll();
   }
+
+  @Version('1')
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(VerifyLogin)
+  @Get("/user/verify")
+  @ApiOperation({ summary: 'get user' })
+  @ApiResponse({ status: 201, description: 'User successfully fetched' })
+  async user(@Headers('x-access-token') token: string) {
+     const userData=this.usersService.verify(token)
+     return userData
+
+  }
+  
 
   @Version('1')
   @UseGuards(JwtAuthGuard)

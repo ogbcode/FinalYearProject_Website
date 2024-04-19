@@ -17,8 +17,8 @@ export class SubscribersService {
     return await this.subscriberRepository.save(newSubscriber);
   }
 
-  async findAll(botId:string): Promise<any> {
-    const subscribers=await this.subscriberRepository.find({where:{bot:{id:botId}},relations:['bot']});
+  async findAll(userId:string): Promise<any> {
+    const subscribers=await this.subscriberRepository.find({where:{bot:{user:{id:userId}}},relations:['bot']});
     const modifiedSubscriber = subscribers.map(subscribers => ({
       id: subscribers.id,
       firstName: subscribers.firstName,

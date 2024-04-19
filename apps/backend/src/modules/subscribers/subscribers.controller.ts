@@ -25,7 +25,7 @@ export class SubscribersController {
 
   @Version('1')
   @Get("/bot/:id")
-  @ApiOperation({ summary: 'Get all subscribers' })
+  @ApiOperation({ summary: 'Get all subscribers for a user' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'List of all subscribers',

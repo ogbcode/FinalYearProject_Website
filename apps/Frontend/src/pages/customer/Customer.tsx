@@ -4,6 +4,7 @@ import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BASE_URL, USERID } from "../../config/config";
 
 const Customers = () => {
   const theme = useTheme();
@@ -27,12 +28,12 @@ const Customers = () => {
     },
     {
       field: "botName",
-      headerName: "Bot",
+      headerName: "Bot Name",
       flex: 1,
     },
     {
       field: "createdAt",
-      headerName: "Date",
+      headerName: "Date Created",
       flex: 1,
       valueGetter: (params:any) => {
         const date = new Date(params.value);
@@ -44,8 +45,9 @@ const Customers = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+       
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
-        const response = await fetch('http://127.0.0.1:3000/backend/v1/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb');
+        const response = await fetch(BASE_URL+'/customers/user/'+USERID);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }

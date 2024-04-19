@@ -1,82 +1,66 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
+import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { BASE_URL, USERID } from "../../config/config";
 
-const Sales = () => {
+const Manage = () => {
   const theme = useTheme();
-  const [rows, setRows] = useState([]);
   const colors = tokens(theme.palette.mode);
+  const [rows, setRows] = useState([]);
+
   const columns = [
+     { field: "id", headerName: "ID", flex: 0.5 },
     {
-      field: "transactionId",
-      headerName: "ID",
-      flex: 0.5,
-      cellClassName: "name-column--cell",
-    },
-    {
-      field: "firstName",
+      field: "name",
       headerName: "Name",
       flex: 1,
-      valueGetter: (params: any) => params.row.customer.firstName,
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
+      // headerAlign: "center"  as GridAlignment,
+      // align: "center" as GridAlignment
     },
 
     {
-      field: "amount",
-      headerName: "Amount",
-      flex: 1,
-      renderCell: (params: any) => (
-        <Typography color={colors.greenAccent[500]}>
-          {params.row.platform === "Paystack" ? "₦" : "$"}
-          {params.value}
-        </Typography>
-      ),
-    },
-    {
-      field: "platform",
-      headerName: "Payment Method",
+      field: "description",
+      headerName: "Description",
       flex: 1,
     },
     {
-      field: "duration",
-      headerName: "Plan",
+      field: "deployment.domain",
+      headerName: "Domain",
       flex: 1,
-      valueGetter: (params: any) => {
-        const duration = params.value;
-        if (duration === "14") {
-          return "2 Weeks";
-        } else if (duration === "30") {
-          return "1 Month";
-        } else {
-          return "Lifetime";
-        }
-      },
+      valueGetter: (params:any) => params.row.deployment?.domain || "", // Access nested property safely
     },
+    {
+      field: "success_url",
+      headerName: "Groupchat Link",
+      flex: 1,
+},
+
+    {
+      field: "customersupport_telegram",
+      headerName: "Support",
+      flex: 1,
+    },
+
+    
     {
       field: "createdAt",
-      headerName: "Date",
+      headerName: "Date Created",
       flex: 1,
-      valueGetter: (params: any) => {
+      valueGetter: (params:any) => {
         const date = new Date(params.value);
         return date.toISOString().split("T")[0];
       },
     },
-  ];
 
+  ];
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
-        const response = await fetch(
-          BASE_URL+"/transaction/user/"+USERID
-        );
+        const response = await fetch(BASE_URL+'/bot/user/'+USERID);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -87,11 +71,16 @@ const Sales = () => {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, []);
   return (
-    <Box m="20px" ml="290px">
-      <Header title="SALES" subtitle="List of sales made" />
+    <Box m="20px" ml="280px"
+    >
+      <Header
+        title="MANAGE BOTS"
+        subtitle="List of deployed bots"
+      />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -129,20 +118,10 @@ const Sales = () => {
           rows={rows}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
-          // footer={{
-          //   renderFooter: () => (
-          //     <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px" }}>
-          //       {/* Display the total amount in the summary row */}
-          //       <Typography variant="h6" color="primary">
-          //         Total: $1000
-          //       </Typography>
-          //     </div>
-          //   ),
-          // }}
         />
       </Box>
     </Box>
   );
 };
 
-export default Sales;
+export default Manage;

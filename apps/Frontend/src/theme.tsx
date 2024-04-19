@@ -1,8 +1,8 @@
-import { createContext, useState, useMemo } from "react";
+import { createContext, useState, useMemo, useEffect } from "react";
 import { Theme, createTheme } from "@mui/material/styles";
 type ColorMode = "dark" | "light";
 // color design tokens export
-export const tokens = (mode:ColorMode) => ({
+export const tokens = (mode: ColorMode) => ({
   ...(mode === "dark"
     ? {
         grey: {
@@ -121,7 +121,7 @@ export const tokens = (mode:ColorMode) => ({
 });
 
 // mui theme settings
-export const themeSettings = (mode:ColorMode) => {
+export const themeSettings = (mode: ColorMode) => {
   const colors = tokens(mode);
   return {
     palette: {
@@ -198,20 +198,29 @@ export const ColorModeContext = createContext({
   toggleColorMode: () => {},
 });
 type MyTheme = Theme & {
-    // You can add any custom properties here if needed
-  };
-  export const useMode = (): [MyTheme, { toggleColorMode: () => void }] => {
-    const [mode, setMode] = useState<ColorMode>("dark");
-  
-    const colorMode = useMemo(
-      () => ({
-        toggleColorMode: () =>
-          setMode((prev: ColorMode) => (prev === "light" ? "dark" : "light")),
-      }),
-      []
-    );
-  
-    const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-    return [theme, colorMode];
-  };
-  
+  // You can add any custom properties here if needed
+};
+export const useMode = (): [MyTheme, { toggleColorMode: () => void }] => {
+  const [mode, setMode] = useState<ColorMode>("dark");
+
+  useEffect(() => {
+    const storedMode = localStorage.getItem("colorMode");
+    if (storedMode && (storedMode === "dark" || storedMode === "light")) {
+      setMode(storedMode);
+    }
+  }, []);
+
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        const newMode = mode === "light" ? "dark" : "light";
+        setMode(newMode);
+        localStorage.setItem("colorMode", newMode);
+      },
+    }),
+    [mode]
+  );
+
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+  return [theme, colorMode];
+};

@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
-import { DataGrid, GridAlignment, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
+import { BASE_URL, USERID } from "../../config/config";
 
 const Subscriber = () => {
   const theme = useTheme();
@@ -11,13 +12,13 @@ const Subscriber = () => {
   const [rows, setRows] = useState([]);
 
   const columns = [
-    { field: "id", headerName: "ID", flex: 0.5 },
+    // { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "firstName",
       headerName: "Name",
       flex: 1,
-      headerAlign: "center"  as GridAlignment,
-      align: "center" as GridAlignment
+      // headerAlign: "center"  as GridAlignment,
+      // align: "center" as GridAlignment
     },
 
     {
@@ -70,7 +71,7 @@ const Subscriber = () => {
     
     {
       field: "createdAt",
-      headerName: "Date",
+      headerName: "Date Created",
       flex: 1,
       valueGetter: (params:any) => {
         const date = new Date(params.value);
@@ -83,7 +84,7 @@ const Subscriber = () => {
     const fetchData = async () => {
       try {
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
-        const response = await fetch('http://127.0.0.1:3000/backend/v1/subscribers/bot/b884da75-1797-4ff8-8b89-2baf7bcb3462');
+        const response = await fetch(BASE_URL+'/subscribers/bot/'+USERID);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }

@@ -13,6 +13,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import GroupIcon from '@mui/icons-material/Group';
 import PublicIcon from '@mui/icons-material/Public';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
+import {  FIRSTNAME, LASTNAME } from "../../config/config";
 const Item = ({
         title,
         to,
@@ -49,6 +50,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
+  // const [isLoading, setIsLoading] = useState(true);
+ 
   return (
     <Box
       sx={{
@@ -90,7 +93,7 @@ const Sidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMIN
+                 
                 </Typography>
                 <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
@@ -116,7 +119,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Ed Roh
+                  {FIRSTNAME} {LASTNAME}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   ADMIN
@@ -128,7 +131,7 @@ const Sidebar = () => {
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
             <Item
               title="Dashboard"
-              to="/"
+              to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -208,3 +211,5 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+

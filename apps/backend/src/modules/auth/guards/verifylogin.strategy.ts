@@ -16,7 +16,6 @@ export class VerifyLogin implements CanActivate {
     const headers = context.switchToHttp().getRequest().headers;
     const access_token = headers['x-access-token'];
 
-    console.log(access_token)
 
     try {
       const  {sub: id}: any = verify(access_token, process.env.JWT_SECRET);
@@ -24,8 +23,6 @@ export class VerifyLogin implements CanActivate {
       if (!id) return false;
 
       const user = await this.usersService.findOneByAuthId(id);
-      console.log("new:",user);
-
       const { auth: { password, ...updatedAuth }, ...updatedUser } = user;
       const updatedUserWithoutPassword = { ...updatedUser, auth: updatedAuth };
 

@@ -45,6 +45,7 @@ export class BotService {
 
   async create(createBotDto: CreateBotDto) {
     // Check if a bot already exists for the given group chat ID
+    // console.log(createBotDto)
     const existingBot = await this.botRepository.findOneBy({
       groupchatId: createBotDto.groupchatId,
     });
@@ -62,12 +63,13 @@ export class BotService {
     createBotDto.binance.binance_publickey=await this.encryptionService.binancePublicKey(createBotDto.binance.binance_apikey,createBotDto.binance.binance_secretkey)
     const botProps: Partial<Bot> = {
       ...createBotDto,
-      binance: await this.encryptionService.encryptData(JSON.stringify(createBotDto.binance)),
-      coinpayment: await this.encryptionService.encryptData(JSON.stringify(createBotDto.coinpayment)),
-      nowpayment: await this.encryptionService.encryptData(JSON.stringify(createBotDto.nowpayment)),
-      paystack: await this.encryptionService.encryptData(JSON.stringify(createBotDto.paystack)),
+      binance:createBotDto.binance ? await this.encryptionService.encryptData(JSON.stringify(createBotDto.binance)): null,
+      coinpayment:createBotDto.coinpayment? await this.encryptionService.encryptData(JSON.stringify(createBotDto.coinpayment)):null,
+      nowpayment:createBotDto.nowpayment? await this.encryptionService.encryptData(JSON.stringify(createBotDto.nowpayment)):null,
+      stripe:createBotDto.stripe? await this.encryptionService.encryptData(JSON.stringify(createBotDto.stripe)):null,
+      paystack:createBotDto.paystack? await this.encryptionService.encryptData(JSON.stringify(createBotDto.paystack)):null,
       telegram: await this.encryptionService.encryptData(JSON.stringify(createBotDto.telegram)),
-      crypto_address: await this.encryptionService.encryptData(JSON.stringify(createBotDto.crypto_address)),
+      crypto_address: createBotDto.crypto_address? await this.encryptionService.encryptData(JSON.stringify(createBotDto.crypto_address)):null,
       user: user,
   };
   
@@ -100,11 +102,12 @@ export class BotService {
 
   async findAll(userId: string): Promise<Bot[]> {
     const bots = await this.botRepository.find({
-      where: { user: { id: userId } },
+      where: { user: { id: userId } },relations:["deployment"],
     });
     if (!bots || bots.length === 0) {
       throw new NotFoundException('No bots found for the user');
     }
+    
     return bots;
   }
 

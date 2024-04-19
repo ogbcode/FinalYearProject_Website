@@ -12,19 +12,22 @@ export class Bot {
   @Column()
   telegram: string
 
-  @Column()
+  @Column({ nullable: true })
   paystack: string;
 
   @Column({ nullable: true })
   binance: string;
 
   @Column({ nullable: true })
+  stripe:string
+  
+  @Column({ nullable: true })
   coinpayment: string;
 
   @Column({ nullable: true })
   nowpayment: string;
 
-  @Column()
+  @Column({ nullable: true })
   crypto_address: string;
 
   @Column()

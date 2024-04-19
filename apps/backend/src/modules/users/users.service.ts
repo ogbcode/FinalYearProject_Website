@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { UserProps } from './interfaces/user.interface';
 import { AuthService } from '../auth/auth.service';
+import { JsonWebTokenError, verify } from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -56,7 +57,7 @@ export class UsersService {
 
   async findOneById(id: string): Promise<User | undefined> {
     return await this.userRepository.findOne({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -68,6 +69,21 @@ export class UsersService {
     return user;
   }
 
+  async verify(token: string) {
+    const { sub: id }: any = verify(token, process.env.JWT_SECRET);
+    const user = await this.findOneByAuthId(id);
+
+    if (!user) {
+      throw new Error('Unauthorized');
+    }
+    const updatedUserWithoutPassword = {
+      ...user,
+      auth: { ...user.auth, password: undefined }
+    }
+    // Convert the object to JSON format before returning
+    return updatedUserWithoutPassword;
+    
+}
   async update(id: string, updateUserDto: UpdateUserDto): Promise<any> {
     const user = await this.find(id);
 

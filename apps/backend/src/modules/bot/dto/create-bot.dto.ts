@@ -61,6 +61,15 @@ class TelegramDto {
 
 }
 
+class StripetDto {
+  @ApiProperty({ description: 'Stripe API Key' })
+  @IsNotEmpty({ message: 'stripe API Key is required' })
+  @IsString()
+  stripe_apikey: string;
+
+}
+
+
 class PaystackDto {
   @ApiProperty({ description: 'Paystack API Key' })
   @IsNotEmpty({ message: 'Paystack API Key is required' })
@@ -97,6 +106,10 @@ export class CreateBotDto {
   @ValidateNested()
   coinpayment?: CoinpaymentDto;
 
+  @ApiPropertyOptional({ description: 'Stripe Integration' })
+  @ValidateNested()
+  stripe?: StripetDto;
+
   @ApiPropertyOptional({ description: 'Nowpayments Integration' })
   @ValidateNested()
   nowpayment?: NowpaymentsDto;
@@ -107,7 +120,7 @@ export class CreateBotDto {
 
   @ApiPropertyOptional({ description: 'Address Integration' })
   @ValidateNested()
-  crypto_address: AddressDto;
+  crypto_address?: AddressDto;
 
   @ApiProperty({ description: 'Group Chat ID' })
   @IsNotEmpty({ message: 'Group Chat ID is required' })

@@ -18,7 +18,9 @@ export class BotController {
     try {
       return await this.botService.create(createBotDto);
     } catch (error) {
+      // console.log(error.message)
       throw new Error(`Failed to create bot: ${error.message}`);
+      
     }
   }
 
