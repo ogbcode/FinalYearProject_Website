@@ -1,6 +1,6 @@
 import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
+// import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
@@ -12,11 +12,40 @@ import LineChart from "../../components/Linechart";
 import BarChart from "../../components/Barchart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import { BASE_URL, USERID } from "../../config/config";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  interface Transaction {
+    id: string;
+    customer:{firstName: string};
+    createdAt: string;
+    platform:string;
+    amount: number;
+  }
+  const [rows, setRows] = useState<Transaction[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(
+          BASE_URL+"/transaction/user/"+USERID
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        console.log(data)
+        setRows(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <Box m="20px" ml={"300px"}>
       {/* HEADER */}
@@ -184,9 +213,9 @@ const Dashboard = () => {
               Recent Transactions
             </Typography>
           </Box>
-          {mockTransactions.map((transaction, i) => (
+          {rows.map((transaction, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
+              key={`${transaction}-${i}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
@@ -197,18 +226,18 @@ const Dashboard = () => {
               overflow="auto"
             >
               <Box>
-                <Typography
+                {/* <Typography
                   color={colors.greenAccent[500]}
                   variant="h5"
                   fontWeight="600"
                 >
-                  {transaction.txId}
-                </Typography>
+                  {transaction.id}
+                </Typography> */}
                 <Typography color={colors.grey[100]}>
-                  {transaction.user}
+                  {transaction.customer.firstName}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
+              <Box color={colors.grey[100]}>{ new Date(transaction.createdAt).toISOString().split("T")[0]}</Box>
               <Box
                 sx={{
                   backgroundColor: colors.primary[400],
@@ -216,7 +245,8 @@ const Dashboard = () => {
                 p="5px 10px"
                 borderRadius="4px"
               >
-                ${transaction.cost}
+                {transaction.platform === "Paystack" ? "₦" : "$"}
+                  {transaction.amount}
               </Box>
             </Box>
           ))}
