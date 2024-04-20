@@ -2,10 +2,10 @@ import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 // import { mockLineData as data } from "../data/mockData";
-import { BASE_URL, USERID } from "../config/config";
+import { BASE_URL} from "../config/config";
 import { useEffect, useState } from "react"
 
-
+const USERID = localStorage.getItem("userId");
 const fetchData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/transaction/user/${USERID}`);

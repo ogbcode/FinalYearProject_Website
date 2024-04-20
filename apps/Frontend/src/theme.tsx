@@ -189,6 +189,9 @@ export const themeSettings = (mode: ColorMode) => {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
         fontSize: 14,
       },
+      //   body1: {
+      //   color: "#000000", // Set text color to black for body text
+      // },
     },
   };
 };

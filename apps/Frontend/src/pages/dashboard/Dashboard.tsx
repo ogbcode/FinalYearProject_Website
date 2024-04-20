@@ -12,10 +12,10 @@ import LineChart from "../../components/Linechart";
 import BarChart from "../../components/Barchart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
-import { BASE_URL, USERID, } from "../../config/config";
+import { BASE_URL } from "../../config/config";
 import { useEffect, useState } from "react";
 
-
+const USERID = localStorage.getItem("userId");
 const fetchData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/transaction/user/${USERID}`);

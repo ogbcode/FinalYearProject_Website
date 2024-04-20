@@ -1,9 +1,9 @@
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
-import { BASE_URL, USERID } from "../config/config";
+import { BASE_URL } from "../config/config";
 import { useEffect, useState } from "react";
-
+const USERID = localStorage.getItem("userId");
 interface SalesByMonth {
   month: string;
   sales: number;
@@ -52,7 +52,7 @@ const BarChart = ({ isDashboard = false }) => {
           }
         });
     
-        setData(Object.values(salesByMonth))
+        setData(Object.values(salesByMonth).reverse())
       } catch (error) {
         console.error("Error organizing transactions by month:", error);
         return []; // Return empty array or handle error as needed
@@ -102,7 +102,10 @@ const BarChart = ({ isDashboard = false }) => {
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={{ scheme: "nivo" }}
+      colorBy='indexValue'
+      colors={{ scheme: "blue_green" }}
+      // borderColor="#000000"
+      enableTotals={true}
       defs={[
         {
           id: "dots",
@@ -113,6 +116,7 @@ const BarChart = ({ isDashboard = false }) => {
           padding: 1,
           stagger: true,
         },
+
         {
           id: "lines",
           type: "patternLines",
@@ -127,6 +131,7 @@ const BarChart = ({ isDashboard = false }) => {
         from: "color",
         modifiers: [["darker", 1.6]],
       }}
+      
       axisTop={null}
       axisRight={null}
       axisBottom={{
