@@ -3,6 +3,9 @@ import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 // import { mockLineData as data } from "../data/mockData";
 import { BASE_URL, USERID } from "../config/config";
+import { useEffect, useState } from "react"
+
+
 const fetchData = async () => {
   try {
     const response = await fetch(`${BASE_URL}/transaction/user/${USERID}`);
@@ -15,6 +18,11 @@ const fetchData = async () => {
     console.error("Error fetching data:", error);
   }
 };
+interface LineChartData {
+  id: string;
+  color: string;
+  data: { x: string; y: number }[];
+}
 
 async function amount() {
   const transactions = await fetchData();
@@ -49,13 +57,15 @@ async function amount() {
       console.error(`Invalid month encountered: ${month}`);
     }
   });
-
+  
   return monthlyAmount;
 }
 
-const generateMockLineData = async () => {
-  const monthlyAmount = await amount();
 
+
+const generateMockLineData = async (): Promise<LineChartData[]> => {
+  const monthlyAmount = await amount();
+ 
   const mockLineData = [
     {
       id: "Sales",
@@ -80,18 +90,10 @@ const generateMockLineData = async () => {
   return mockLineData;
 };
 
-function calculateTotalAmount(monthlyAmounts: any): number {
-  let totalAmount = 0;
-  for (const month in monthlyAmounts) {
-    totalAmount += monthlyAmounts[month];
-  }
-  const roundedNum = Math.round(totalAmount); 
-  return roundedNum;
-}
 
-export const yearlyRevenue=calculateTotalAmount(await amount())
 
-const data =await generateMockLineData()
+
+
 const LineChart = ({
   // isCustomLineColors = false,
   isDashboard = false,
@@ -101,7 +103,15 @@ const LineChart = ({
 }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [data, setData] = useState<LineChartData[]>([]);
+  useEffect(() => {
+    const fetchDataAndGenerateData = async () => {
+      const mockLineData = await generateMockLineData();
+      setData(mockLineData || []); // Set data to empty array if mockLineData is null
+    };
 
+    fetchDataAndGenerateData();
+  }, []);
   return (
     <ResponsiveLine
       data={data}
@@ -208,3 +218,4 @@ const LineChart = ({
 };
 
 export default LineChart;
+

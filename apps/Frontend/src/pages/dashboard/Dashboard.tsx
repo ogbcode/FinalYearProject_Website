@@ -7,7 +7,7 @@ import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Header from "../../components/Header";
-import LineChart, { yearlyRevenue } from "../../components/Linechart";
+import LineChart from "../../components/Linechart";
 // import GeographyChart from "../../components/Geographychart";
 import BarChart from "../../components/Barchart";
 import StatBox from "../../components/StatBox";
@@ -15,6 +15,66 @@ import ProgressCircle from "../../components/ProgressCircle";
 import { BASE_URL, USERID, } from "../../config/config";
 import { useEffect, useState } from "react";
 
+
+const fetchData = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/transaction/user/${USERID}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+
+async function amount() {
+  const transactions = await fetchData();
+
+  const monthlyAmount: { [key: string]: number } = {
+    January: 0,
+    February: 0,
+    March: 0,
+    April: 0,
+    May: 0,
+    June: 0,
+    July: 0,
+    August: 0,
+    September: 0,
+    October: 0,
+    November: 0,
+    December: 0,
+  };
+
+  transactions.forEach((transaction: { amount: any; platform: any; createdAt: any; }) => {
+    const { amount, platform, createdAt } = transaction;
+    const month = new Date(createdAt).toLocaleString('en-US', { month: 'long' });
+
+    let parsedAmount = parseFloat(amount);
+    if (platform === 'Paystack') {
+      parsedAmount /= 1200; // Divide by 1200 if platform is Paystack
+    }
+
+    if (Object.keys(monthlyAmount).includes(month)) {
+      monthlyAmount[month] += parsedAmount;
+    } else {
+      console.error(`Invalid month encountered: ${month}`);
+    }
+  });
+  
+  return monthlyAmount;
+}
+
+function calculateTotalAmount(monthlyAmounts: any): number {
+  let totalAmount = 0;
+  for (const month in monthlyAmounts) {
+    totalAmount += monthlyAmounts[month];
+  }
+  const roundedNum = Math.round(totalAmount); 
+  return roundedNum;
+}
 const Dashboard = () => {
   const [transactionsCount, setTransactionCount] = useState<string>("");
   const [subscribersCount, setSubscriberCount] = useState<string>("");
@@ -22,6 +82,17 @@ const Dashboard = () => {
   const [customersCount, setCustomersCount] = useState<string>("");
 
   const [botsCount, setBotsCount] = useState<string>("");
+  const[yearlyRevenue,setYearlyRevenue]=useState<number>(0)
+
+  useEffect(() => {
+    const fetchDataAndGenerateData = async () => {
+      const Revenue=calculateTotalAmount(await amount())
+      setYearlyRevenue(Revenue); // Set data to empty array if mockLineData is null
+    };
+
+    fetchDataAndGenerateData();
+  }, []);
+
 
   useEffect(() => {
     const transactionCount = async () => {
@@ -153,6 +224,7 @@ const Dashboard = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            borderRadius:"10px"
           }}
         >
           <StatBox
@@ -174,6 +246,7 @@ const Dashboard = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            borderRadius:"10px"
           }}
         >
           <StatBox
@@ -195,6 +268,7 @@ const Dashboard = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            borderRadius:"10px"
           }}
         >
           <StatBox
@@ -209,7 +283,7 @@ const Dashboard = () => {
             }
           />
         </Box>
-        
+
         <Box
           gridColumn="span 3"
           sx={{
@@ -217,6 +291,7 @@ const Dashboard = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            borderRadius:"10px"
           }}
         >
           <StatBox
@@ -231,7 +306,7 @@ const Dashboard = () => {
             }
           />
         </Box>
-        
+
 
         {/* ROW 2 */}
         <Box
@@ -239,6 +314,7 @@ const Dashboard = () => {
           gridRow="span 2"
           sx={{
             backgroundColor: colors.primary[400],
+            borderRadius:"10px"
           }}
         >
           <Box
@@ -284,6 +360,7 @@ const Dashboard = () => {
             backgroundColor: colors.primary[400],
             overflow: "auto",
             height: "39rem",
+            borderRadius:"10px"
           }}
         >
           <Box
@@ -293,6 +370,7 @@ const Dashboard = () => {
             borderBottom={`6px solid ${colors.primary[500]}`}
             color={colors.grey[100]}
             p="18px"
+
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
               Recent Transactions
@@ -346,6 +424,7 @@ const Dashboard = () => {
           p="30px"
           sx={{
             backgroundColor: colors.primary[400],
+            borderRadius:"10px"
           }}
         >
           <Typography variant="h5" fontWeight="600">
@@ -373,6 +452,7 @@ const Dashboard = () => {
           gridRow="span 2"
           sx={{
             backgroundColor: colors.primary[400],
+            borderRadius:"10px"
           }}
         >
           <Typography
