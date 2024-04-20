@@ -34,6 +34,10 @@ export class SubscribersService {
     return modifiedSubscriber
   
   }
+  async subscriberCount(userId:string): Promise<any> {
+    const subscribersCount=await this.subscriberRepository.count({where:{bot:{user:{id:userId}}}});
+    return subscribersCount
+  }
   async findOne(id: string): Promise<Subscriber> {
     const subscriber = await this.subscriberRepository.findOne({where:{id:id}});
     if (!subscriber) {

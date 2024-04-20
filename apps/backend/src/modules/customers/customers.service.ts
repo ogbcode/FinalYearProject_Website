@@ -60,7 +60,11 @@ export class CustomersService {
   
     return modifiedCustomers;
   }
+  async customerCount(userId: string): Promise<number> {
+     const customer= await this.customerRepository.count({where:{user:{id:userId}},relations: ['bot']});
 
+    return customer;
+  }
   async findAllForBroadcast(botId:string):Promise<any>{
     const customer= await this.customerRepository.find({where:{bot:{ id: botId}}});
     if(!customer){

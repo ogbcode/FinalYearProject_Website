@@ -40,6 +40,23 @@ export class SubscribersController {
       throw new Error(`Failed to fetch subscribers: ${error.message}`);
     }
   }
+  @Version('1')
+  @Get("/bot/count/:id")
+  @ApiOperation({ summary: 'Get the numbers of subscribers a user has' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'number of subscribers',
+    type: Subscriber,
+    isArray: true,
+  })
+  async subscriberCount(@Param('id') id: string) {
+    try {
+      const subscribers = await this.subscribersService.subscriberCount(id);
+      return subscribers;
+    } catch (error) {
+      throw new Error(`Failed to fetch subscribers: ${error.message}`);
+    }
+  }
 
   @Version('1')
   @Get(':id')

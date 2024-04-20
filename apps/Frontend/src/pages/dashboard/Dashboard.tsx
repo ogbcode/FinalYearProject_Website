@@ -2,27 +2,112 @@ import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 // import { mockTransactions } from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import EmailIcon from "@mui/icons-material/Email";
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import TrafficIcon from "@mui/icons-material/Traffic";
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Header from "../../components/Header";
-import LineChart from "../../components/Linechart";
+import LineChart, { yearlyRevenue } from "../../components/Linechart";
 // import GeographyChart from "../../components/Geographychart";
 import BarChart from "../../components/Barchart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
-import { BASE_URL, USERID } from "../../config/config";
+import { BASE_URL, USERID, } from "../../config/config";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [transactionsCount, setTransactionCount] = useState<string>("");
+  const [subscribersCount, setSubscriberCount] = useState<string>("");
+
+  const [customersCount, setCustomersCount] = useState<string>("");
+
+  const [botsCount, setBotsCount] = useState<string>("");
+
+  useEffect(() => {
+    const transactionCount = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(
+          BASE_URL + "/transaction/user/count/" + USERID
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.text();
+        console.log(data);
+        setTransactionCount(data);
+        return data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    transactionCount();
+  }, []);
+  useEffect(() => {
+    const subscriberCount = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(
+          BASE_URL + "/subscribers/bot/count/" + USERID
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.text();
+        setSubscriberCount(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    subscriberCount();
+  }, []);
+
+  useEffect(() => {
+    const customerCount = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(
+          BASE_URL + "/customers/user/count/" + USERID
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.text();
+        setCustomersCount(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    customerCount();
+  }, []);
+
+  useEffect(() => {
+    const botCount = async () => {
+      try {
+        // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+        const response = await fetch(BASE_URL + "/bot/user/count/" + USERID);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.text();
+        setBotsCount(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    botCount();
+  }, []);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   interface Transaction {
     id: string;
-    customer:{firstName: string};
+    customer: { firstName: string };
     createdAt: string;
-    platform:string;
+    platform: string;
     amount: number;
   }
   const [rows, setRows] = useState<Transaction[]>([]);
@@ -32,13 +117,13 @@ const Dashboard = () => {
       try {
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
         const response = await fetch(
-          BASE_URL+"/transaction/user/"+USERID
+          BASE_URL + "/transaction/user/recent/" + USERID
         );
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        console.log(data)
+
         setRows(data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -52,8 +137,6 @@ const Dashboard = () => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
       </Box>
-
-
 
       {/* GRID & CHARTS */}
       <Box
@@ -73,12 +156,12 @@ const Dashboard = () => {
           }}
         >
           <StatBox
-            title="12,361"
-            subtitle="Emails Sent"
+            title={transactionsCount}
+            subtitle="Total Sales"
             progress="0.75"
             increase="+14%"
             icon={
-              <EmailIcon
+              <CreditCardIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }
@@ -94,29 +177,8 @@ const Dashboard = () => {
           }}
         >
           <StatBox
-            title="431,225"
-            subtitle="Sales Obtained"
-            progress="0.50"
-            increase="+21%"
-            icon={
-              <PointOfSaleIcon
-                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
-              />
-            }
-          />
-        </Box>
-        <Box
-          gridColumn="span 3"
-          sx={{
-            backgroundColor: colors.primary[400],
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <StatBox
-            title="32,441"
-            subtitle="New Clients"
+            title={customersCount}
+            subtitle="Total Clients"
             progress="0.30"
             increase="+5%"
             icon={
@@ -136,17 +198,40 @@ const Dashboard = () => {
           }}
         >
           <StatBox
-            title="1,325,134"
-            subtitle="Traffic Received"
-            progress="0.80"
-            increase="+43%"
+            title={subscribersCount}
+            subtitle="Group Subscribers"
+            progress="1"
+            increase="+100%"
             icon={
-              <TrafficIcon
+              <PointOfSaleIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
               />
             }
           />
         </Box>
+        
+        <Box
+          gridColumn="span 3"
+          sx={{
+            backgroundColor: colors.primary[400],
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <StatBox
+            title={botsCount}
+            subtitle="Bots Deployed"
+            progress="0.80"
+            increase=""
+            icon={
+              <SmartToyIcon
+                sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+              />
+            }
+          />
+        </Box>
+        
 
         {/* ROW 2 */}
         <Box
@@ -176,7 +261,7 @@ const Dashboard = () => {
                 fontWeight="bold"
                 color={colors.greenAccent[500]}
               >
-                $59,342.32
+                ${yearlyRevenue.toLocaleString()}
               </Typography>
             </Box>
             <Box>
@@ -237,7 +322,9 @@ const Dashboard = () => {
                   {transaction.customer.firstName}
                 </Typography>
               </Box>
-              <Box color={colors.grey[100]}>{ new Date(transaction.createdAt).toISOString().split("T")[0]}</Box>
+              <Box color={colors.grey[100]}>
+                {new Date(transaction.createdAt).toISOString().split("T")[0]}
+              </Box>
               <Box
                 sx={{
                   backgroundColor: colors.primary[400],
@@ -246,7 +333,7 @@ const Dashboard = () => {
                 borderRadius="4px"
               >
                 {transaction.platform === "Paystack" ? "₦" : "$"}
-                  {transaction.amount}
+                {transaction.amount}
               </Box>
             </Box>
           ))}
@@ -276,7 +363,7 @@ const Dashboard = () => {
               color={colors.greenAccent[500]}
               sx={{ mt: "15px" }}
             >
-              $48,352 revenue generated
+              ${yearlyRevenue.toLocaleString()} revenue generated
             </Typography>
             <Typography>Includes extra misc expenditures and costs</Typography>
           </Box>

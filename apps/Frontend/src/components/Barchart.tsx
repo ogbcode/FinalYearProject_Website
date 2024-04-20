@@ -1,26 +1,83 @@
 import { useTheme } from "@mui/material";
 import { ResponsiveBar } from "@nivo/bar";
 import { tokens } from "../theme";
-import { mockBarData as data } from "../data/mockData";
+import { BASE_URL, USERID } from "../config/config";
+import { useEffect, useState } from "react";
+
+interface SalesByMonth {
+  month: string;
+  sales: number;
+  salesColor: string;
+}
+
+const fetchData = async () => {
+  try {
+    // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
+    const response = await fetch(
+      BASE_URL+"/transaction/user/"+USERID
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+
 
 const BarChart = ({ isDashboard = false }) => {
+  const [datax, setData] = useState<SalesByMonth[]>([]);
+
+  useEffect(() => {
+    const organizeTransactionsByMonth= async () =>  {
+      try {
+        const salesByMonth: { [key: string]: SalesByMonth } = {};
+        const transactions = await fetchData();
+    
+        transactions.forEach((transaction: { createdAt: string | number | Date; }) => {
+          const createdAt = new Date(transaction.createdAt);
+          const month = createdAt.toLocaleString('default', { month: 'long' });
+    
+          if (!salesByMonth[month]) {
+            salesByMonth[month] = {
+              month,
+              sales: 1, // Initialize sales count to 1 for the first transaction in the month
+              salesColor:"hsl(185, 70%, 50%)",
+            };
+          } else {
+            salesByMonth[month].sales += 1; // Increment sales count for subsequent transactions in the month
+          }
+        });
+    
+        setData(Object.values(salesByMonth))
+      } catch (error) {
+        console.error("Error organizing transactions by month:", error);
+        return []; // Return empty array or handle error as needed
+      }
+    };
+    organizeTransactionsByMonth();
+    }, []);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
   return (
     <ResponsiveBar
-      data={data}
+    // @ts-ignore
+      data={datax}
       theme={{
         // added
         axis: {
           domain: {
             line: {
-              stroke: colors.grey[100],
+              stroke: colors.greenAccent[100],
             },
           },
           legend: {
             text: {
-              fill: colors.grey[100],
+              fill: colors.grey[900],
             },
           },
           ticks: {
@@ -39,8 +96,8 @@ const BarChart = ({ isDashboard = false }) => {
           },
         },
       }}
-      keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]}
-      indexBy="country"
+      keys={["sales"]} // updated keys
+      indexBy="month" // updated to lowercase "month"
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
@@ -76,7 +133,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "country", // changed
+        legend: isDashboard ? undefined : "month", // changed
         legendPosition: "middle",
         legendOffset: 32,
       }}
@@ -84,7 +141,7 @@ const BarChart = ({ isDashboard = false }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "food", // changed
+        legend: isDashboard ? undefined : "sales", // changed
         legendPosition: "middle",
         legendOffset: -40,
       }}

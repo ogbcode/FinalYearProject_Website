@@ -35,6 +35,18 @@ export class BotController {
       throw new Error(`Failed to fetch bots: ${error.message}`);
     }
   }
+  @Version('1')
+  @Get("/user/count/:id")
+  @ApiOperation({ summary: 'Number of bots a user has' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'No of bots a user  has' })
+  async botCount(@Param("id") id: string): Promise<any> {
+    try {
+      return await this.botService.botCount(id);
+    } catch (error) {
+      throw new Error(`Failed to fetch bots: ${error.message}`);
+    }
+  }
+
 @Version('1')
 @Get("data/:id")
 @ApiOperation({ summary: 'Send the bot the relevant data it needs to start' })

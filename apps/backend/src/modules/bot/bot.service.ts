@@ -111,6 +111,19 @@ export class BotService {
     return bots;
   }
 
+
+  async botCount(userId: string): Promise<any> {
+    try{
+    const botCount = await this.botRepository.count({
+      where: { user: { id: userId } },
+    });
+    return botCount
+  }
+  catch(error)
+  {
+    return error
+  }
+  }
   async findOne(id: string): Promise<Bot> {
     const bot = await this.botRepository.findOne({ where: { id } ,relations:["deployment"]});
     if (!bot) {

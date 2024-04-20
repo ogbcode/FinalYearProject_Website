@@ -59,6 +59,40 @@ export class TransactionsController {
     }
   }
   @Version('1')
+  @Get("user/count/:id")
+  @ApiOperation({ summary: 'Get all transactions for a customer' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of all transactionsm for a customer',
+    type: Transaction,
+    isArray: true,
+  })
+  async sales(@Param('id') userId: string) {
+    try {
+      const transactions = await this.transactionsService.transactionCount(userId);
+      return transactions;
+    } catch (error) {
+      throw new Error(`Failed to fetch transactions: ${error.message}`);
+    }
+  }
+  @Version('1')
+  @Get("user/recent/:id")
+  @ApiOperation({ summary: 'Get all transactions for a customer' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'List of all transactionsm for a customer',
+    type: Transaction,
+    isArray: true,
+  })
+  async recenttransaction(@Param('id') userId: string) {
+    try {
+      const transactions = await this.transactionsService.recentTransactions(userId);
+      return transactions;
+    } catch (error) {
+      throw new Error(`Failed to fetch transactions: ${error.message}`);
+    }
+  }
+  @Version('1')
   @Get(':id')
   @ApiOperation({ summary: 'Get a transaction by ID' })
   @ApiResponse({ status: HttpStatus.OK, description: 'Transaction found by ID' })

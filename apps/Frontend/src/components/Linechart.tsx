@@ -1,8 +1,97 @@
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
-import { mockLineData as data } from "../data/mockData";
+// import { mockLineData as data } from "../data/mockData";
+import { BASE_URL, USERID } from "../config/config";
+const fetchData = async () => {
+  try {
+    const response = await fetch(`${BASE_URL}/transaction/user/${USERID}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
 
+async function amount() {
+  const transactions = await fetchData();
+
+  const monthlyAmount: { [key: string]: number } = {
+    January: 0,
+    February: 0,
+    March: 0,
+    April: 0,
+    May: 0,
+    June: 0,
+    July: 0,
+    August: 0,
+    September: 0,
+    October: 0,
+    November: 0,
+    December: 0,
+  };
+
+  transactions.forEach((transaction: { amount: any; platform: any; createdAt: any; }) => {
+    const { amount, platform, createdAt } = transaction;
+    const month = new Date(createdAt).toLocaleString('en-US', { month: 'long' });
+
+    let parsedAmount = parseFloat(amount);
+    if (platform === 'Paystack') {
+      parsedAmount /= 1200; // Divide by 1200 if platform is Paystack
+    }
+
+    if (Object.keys(monthlyAmount).includes(month)) {
+      monthlyAmount[month] += parsedAmount;
+    } else {
+      console.error(`Invalid month encountered: ${month}`);
+    }
+  });
+
+  return monthlyAmount;
+}
+
+const generateMockLineData = async () => {
+  const monthlyAmount = await amount();
+
+  const mockLineData = [
+    {
+      id: "Sales",
+      color: tokens("dark").greenAccent[500],
+      data: [
+        { x: "January", y: monthlyAmount.January },
+        { x: "February", y: monthlyAmount.February },
+        { x: "March", y: monthlyAmount.March },
+        { x: "April", y: monthlyAmount.April },
+        { x: "May", y: monthlyAmount.May },
+        { x: "June", y: monthlyAmount.June },
+        { x: "July", y: monthlyAmount.July },
+        // { x: "August", y: monthlyAmount.August },
+        // { x: "September", y: monthlyAmount.September },
+        // { x: "October", y: monthlyAmount.October },
+        // { x: "November", y: monthlyAmount.November },
+        // { x: "December", y: monthlyAmount.December },
+      ],
+    },
+  ];
+
+  return mockLineData;
+};
+
+function calculateTotalAmount(monthlyAmounts: any): number {
+  let totalAmount = 0;
+  for (const month in monthlyAmounts) {
+    totalAmount += monthlyAmounts[month];
+  }
+  const roundedNum = Math.round(totalAmount); 
+  return roundedNum;
+}
+
+export const yearlyRevenue=calculateTotalAmount(await amount())
+
+const data =await generateMockLineData()
 const LineChart = ({
   // isCustomLineColors = false,
   isDashboard = false,

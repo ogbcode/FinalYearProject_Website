@@ -44,6 +44,28 @@ export class CustomersController {
   }
 
   @Version('1')
+  @Get("user/count/:id")
+  @ApiOperation({ summary: 'Get the number of customers' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'get no of customers for a use',
+    type: Customer,
+    isArray: true,
+  })
+  
+  async customerCount(@Param('id') id: string) {
+    try {
+      const customers = await this.customersService.customerCount(id);
+      return customers;
+    } catch (error) {
+      throw new Error(`Failed to fetch customers: ${error.message}`);
+    }
+  }
+
+
+  
+
+  @Version('1')
   @Get("/telegram/id/:id")
   @ApiOperation({ summary: 'Get all telegramId linked to a bot' })
   @ApiResponse({

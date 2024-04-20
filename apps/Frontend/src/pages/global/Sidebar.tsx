@@ -13,7 +13,6 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import GroupIcon from '@mui/icons-material/Group';
 import PublicIcon from '@mui/icons-material/Public';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
-import {  FIRSTNAME, LASTNAME } from "../../config/config";
 const Item = ({
         title,
         to,
@@ -119,7 +118,7 @@ const Sidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  {FIRSTNAME} {LASTNAME}
+                  {localStorage.getItem("firstName")} {localStorage.getItem("lastName")}
                 </Typography>
                 <Typography variant="h5" color={colors.greenAccent[500]}>
                   ADMIN

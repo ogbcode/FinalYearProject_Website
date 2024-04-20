@@ -42,8 +42,27 @@ export class TransactionsService {
     return await this.transactionRepository.find({where:{customer:{id:customerId}}});
   }
 
-  async findAll(userId:string): Promise<Transaction[]> {
-    return await this.transactionRepository.find({where:{customer:{user:{id:userId}}},relations:["customer"]});
+  async findAll(userId: string): Promise<Transaction[]> {
+    return await this.transactionRepository.find({
+      where: { customer: { user: { id: userId } } },
+      relations: ['customer'],
+      order: { createdAt: 'DESC' }, // Order by createdAt field in descending order
+    });
+  }
+
+  async transactionCount(userId: string): Promise<number> {
+    const count = await this.transactionRepository.count({
+      where: { customer: { user: { id: userId } } },
+    });
+    return count;
+  }
+  async recentTransactions(userId: string): Promise<Transaction[]> {
+    return await this.transactionRepository.find({
+      where: { customer: { user: { id: userId } } },
+      relations: ['customer'],
+      order: { createdAt: 'DESC' }, // Order by createdAt field in descending order
+      take: 10, // Limit the result to the first 10 transactions
+    });
   }
 
   async findOne(id: string): Promise<Transaction> {
