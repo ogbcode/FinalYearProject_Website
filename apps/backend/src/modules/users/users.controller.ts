@@ -41,6 +41,13 @@ export class UsersController {
   async findAll() {
     return await this.usersService.findAll();
   }
+  @Version('1')
+  @Get("backend/port")
+  @ApiOperation({ summary: 'Get port' })
+  @ApiResponse({ status: 200, description: 'get the backend port' })
+  async getPort() {
+    return await this.usersService.getPort()
+  }
 
   @Version('1')
   // @UseGuards(JwtAuthGuard, RolesGuard)

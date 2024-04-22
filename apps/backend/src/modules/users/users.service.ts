@@ -39,6 +39,10 @@ export class UsersService {
 
     return await this.userRepository.save(newUser);
   }
+  async getPort(){
+    return process.env.PORT
+  }
+
 
   async findByAuthEmail(email: string): Promise<User> {
     return await this.userRepository.findOneBy({ auth: { email } });
