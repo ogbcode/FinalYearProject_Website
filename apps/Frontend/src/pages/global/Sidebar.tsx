@@ -52,7 +52,7 @@ const Sidebar = () => {
   // const [isLoading, setIsLoading] = useState(true);
  
   return (
-    <Box
+  <Box
       sx={{
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
@@ -61,7 +61,8 @@ const Sidebar = () => {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 35px 5px 20px !important",
+          padding: "5px 20px !important", // Reduce horizontal padding
+          margin: "5px 0 !important", // Reduce vertical margin
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
