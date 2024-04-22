@@ -7,15 +7,15 @@ const Geography = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
-    <Box m="20px">
+    <Box m="20px" color="black"> {/* Set color to black */}
       <Header title="Geography" subtitle="Simple Geography Chart" />
 
       <Box
-        height="100vh"
+        height="90vh"
         border={`1px solid ${colors.grey[100]}`}
         borderRadius="4px"
         marginTop={"-100px"}
-         ml={"300px"}
+        ml={"300px"}
       >
         <GeographyChart />
       </Box>

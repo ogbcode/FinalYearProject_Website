@@ -1,21 +1,24 @@
-import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { ColorModeContext, useMode } from "./theme";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import Topbar from "./pages/global/Topbar";
-import Dashboard from "./pages/dashboard/Dashboard";
-import Login from "./pages/login/Login";
-import Sales from "./pages/sales/Sales";
-import Sidebar from "./pages/global/Sidebar";
-import Deploy from "./pages/deploy/deploy";
-import FAQ from "./pages/faq/faq";
-import Geography from "./pages/geography/geography";
-import Customers from "./pages/customer/Customer";
-import Subscriber from "./pages/subscriber/Subscriber";
-import Manage from "./pages/manage/Manage";
-import HomePage from "./home/Home";
+
+import { BrowserRouter, Outlet, Route, Routes, Navigate } from 'react-router-dom';
+import { ColorModeContext, useMode } from './theme';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import Topbar from './pages/global/Topbar';
+import Dashboard from './pages/dashboard/Dashboard';
+import Login from './pages/login/Login';
+import Sales from './pages/sales/Sales';
+import Sidebar from './pages/global/Sidebar';
+import Deploy from './pages/deploy/deploy';
+import FAQ from './pages/faq/faq';
+import Geography from './pages/geography/geography';
+import Customers from './pages/customer/Customer';
+import Subscriber from './pages/subscriber/Subscriber';
+import Manage from './pages/manage/Manage';
+import HomePage from './pages/home/Home';
 
 function App() {
   const [theme, colorMode] = useMode();
+
+ 
   const Layout = () => {
     return (
       <div className="layout">
@@ -27,6 +30,7 @@ function App() {
       </div>
     );
   };
+
   const Layout2 = () => {
     return (
       <div className="layout">
@@ -37,7 +41,7 @@ function App() {
       </div>
     );
   };
-  
+
   return (
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
@@ -55,9 +59,11 @@ function App() {
               <Route path="/manage" element={<Manage />} />
             </Route>
             <Route element={<Layout2 />}>
-            <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<Login />} />
             </Route>
-            <Route path="/" element={<HomePage/>} />
+            <Route path="/" element={<HomePage />} />
+            {/* Redirect any unmatched route to home */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

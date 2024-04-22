@@ -6,21 +6,51 @@ import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { BASE_URL } from "../../config/config";
 import {
+  Box,
   Button,
   FormControlLabel,
-  Grid,
   TextField,
   Typography,
 } from "@mui/material";
 import Header from "../../components/Header";
 // import { AuthContext } from "../store/interfaces/auth";
 
+export const loadUser = async (token: any) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/user/verify`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'x-access-token': token,
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error('Failed to fetch user data');
+    }
+    
+    
+    const userData = await response.json();
+    localStorage.setItem('userId', userData.id);
+    localStorage.setItem('firstName', userData.firstName);
+    localStorage.setItem('lastName', userData.lastName);
+    localStorage.setItem('isVerified', "True");
+    return true;
+  } catch (error) {
+    console.error(error);
+    
+    throw new Error('Failed to load user data'+error);
+    
+  }
+};
 
 const Login = () => {
   // const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState(""); // State for login error
+
   // const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
   // const { isLoggedIn, login, logout } = useContext(AuthContext);
@@ -31,31 +61,7 @@ const Login = () => {
   });
  
 
-  const loadUser = async (token: string) => {
-    try {
-      const response = await fetch(`${BASE_URL}/users/user/verify`, {
-        method: "GET",
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-token': token,
-        },
-      });
-  
-      if (response.status !== 200) {
-        throw new Error('Failed to fetch user data');
-      }
-      
-      
-      const userData = await response.json();
-      localStorage.setItem('userId', userData.id);
-      localStorage.setItem('firstName', userData.firstName);
-      localStorage.setItem('lastName', userData.lastName);
-      return { message: 'success' };
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to load user data'+error);
-    }
-  };
+
 
   
   const login = async (credentials: LoginProps) => {
@@ -94,6 +100,7 @@ const Login = () => {
           throw new Error("No access token");
         }
       } catch (error) {
+        setLoginError("Login failed. Please check your credentials."); 
         console.log(error);
       }
       setIsLoginLoading(false);
@@ -102,156 +109,161 @@ const Login = () => {
   );
   
 
-
-  return (
-    <Grid
-    
-      container
+return (
+  <Box
+    display="flex"
+    justifyContent="center"
+    alignItems="center"
+    height="83vh"
+    px={4}
+  >
+    <Box
+      display="flex"
+      flexDirection={{ xs: "column", md: "row" }}
       justifyContent="center"
       alignItems="center"
-      height="20vh"
-      width="98vw"
-      px={4}
+      height="100%"
+      width="95%"
     >
-      <Grid
-        container
-        item
-        direction="row"
+      <Box
+        display={{ xs: "none", md: "flex" }}
+        justifyContent="center"
+        p={8}
+        maxWidth="60%"
+        flexDirection={"column"}
+        marginBottom="10vh"
+      >
+        <Header 
+          title="TELEBOT SOLUTIONS"
+          subtitle="Automate Your telegram Business"
+          // style={{ position: "absolute", bottom: "50px" }}
+        />
+        <img
+          src="/assets/icons/telegram.png"
+          alt="login illustration"
+          className="h-full"
+          style={{ width: "90%", height: "auto" }}
+        />
+      </Box>
+      <Box
+        display="flex"
         justifyContent="center"
         alignItems="center"
-        height="100%"
-        width="95%"
+        width="35%"
+        maxWidth="50%"
+        // maxHeight="70%"
+        bgcolor="#F8F8F8"
+        borderRadius={20}
+        p={8}
       >
-        <Grid
-         direction="row"
-          item
-          md={6}
-          justifyContent="center"
-          display={{ xs: "none", md: "flex" }}
-          p={8}
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          width="auto"
+          // maxHeight={"40%"}
+          gap={3}
         >
-          <Header
-            title="TELEBOT SOLUTIONS"
-            subtitle="Automate Your telegram Business"
-          />
-          <img
-            src="/assets/icons/telegram.png"
-            alt="login illustration"
-            className="h-full"
-          />
-        </Grid>
-        <Grid  item xs={12} md={6} display="flex" justifyContent="center">
-          <Grid
-            container
-            item
-            direction="column"
-            justifyContent="center"
-            width="100%"
-            maxWidth="70%"
-            gap={8}
-            bgcolor="#F8F8F8"
-            borderRadius={20}
-            p={8}
-            // height="60vh"
+          <Typography variant="h4" color="primary" fontWeight="bold">
+            LOGIN
+          </Typography>
+          <Formik
+            initialValues={{ email: "", password: "" }}
+            validationSchema={LoginSchema}
+            onSubmit={(values) => {
+              handleLogin(values);
+            }}
           >
-            <Typography variant="h4" color="primary" fontWeight="bold">
-              Login
-            </Typography>
-            <Formik
-              initialValues={{ email: "", password: "" }}
-              validationSchema={LoginSchema}
-              onSubmit={(values) => {
-                handleLogin(values);
-              }}
-            >
-              {({ errors, values, setFieldValue }) => (
-                <Form>
-                  <Grid container direction="column" gap={6}>
-                    <div>
-                      <Typography variant="body1" color="#52525C" fontSize="xl">
-                        Email
-                      </Typography>
-                      <TextField
-                        variant="outlined"
-                        type="email"
-                        onChange={(e) => setFieldValue("email", e.target.value)}
-                        placeholder="Your email address"
-                        error={!!errors.email}
-                        helperText={errors.email}
-                        InputProps={{
-                          sx: { color: "black" }, // Set the text color to blue
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <Typography variant="body1" color="#52525C" fontSize="xl">
-                        Password
-                      </Typography>
-                      <TextField
-                        variant="outlined"
-                        type={showPassword ? "text" : "password"}
-                        value={values.password}
-                        // sx={{ color: colors.greenAccent[300] }}
-                        placeholder={
-                          showPassword ? "Enter your password" : "********"
-                        }
-                        onChange={(e) =>
-                          setFieldValue("password", e.target.value)
-                        }
-                        error={!!errors.password}
-                        helperText={errors.password}
-                        InputProps={{
-                          sx: { color: "black" },
-                          endAdornment: (
-                            <Button
-                              onClick={() => setShowPassword(!showPassword)}
-                              aria-label={
-                                showPassword ? "Hide Password" : "Show Password"
-                              }
-                            >
-                              {showPassword ? "Hide" : "Show"}
-                            </Button>
-                          ),
-                        }}
-                      />
-                    </div>
-                    <FormControlLabel
-                      control={<Checkbox id="remember-me" />}
-                      label="Remember Me"
-                      sx={{ color: "black" }} // Set the text color to black
-                    />
-                    <Link to="/">Forgot Password?</Link>
-                    <Button
-                      variant={isLoginLoading ? "outlined" : "contained"}
-                      color="primary"
-                      type="submit"
-                      disabled={isLoginLoading}
-                      onClick={() => handleLogin}
-                    >
-                      {isLoginLoading ? "Loading..." : "Login"}
-                    </Button>
-                    <Typography variant="body1" color="#52525C">
-                      Or login to your account using
+            {({ errors, values, setFieldValue }) => (
+              <Form>
+                <Box display="flex" flexDirection="column" gap={2} alignItems="right">
+                <Box display="flex" alignItems="center">
+                    <Typography variant="body1" color="#52525C" fontSize="xl">
+                      Email
                     </Typography>
-                    <Grid container item gap={8}>
-                      <img
-                        src="/assets/icons/google-icon.svg"
-                        alt="Google Icon"
-                      />
-                      <img
-                        src="/assets/icons/facebook-icon.svg"
-                        alt="Facebook Icon"
-                      />
-                    </Grid>
-                  </Grid>
-                </Form>
-              )}
-            </Formik>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
-  );
-};
+                    <TextField
+                      variant="outlined"
+                      type="email"
+                      onChange={(e) =>
+                        setFieldValue("email", e.target.value)
+                      }
+                      placeholder="Your email address"
+                      error={!!errors.email}
+                      helperText={errors.email}
+                      InputProps={{
+                        sx: { color: "black" , width: "300px", marginLeft: "33px",marginTop:"7px" },
+                      }}
+                    />
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <Typography variant="body1" color="#52525C" fontSize="xl">
+                      Password
+                    </Typography>
+                    <TextField
+                      variant="outlined"
+                      type={showPassword ? "text" : "password"}
+                      value={values.password}
+                      placeholder={
+                        showPassword ? "Enter your password" : "********"
+                      }
+                      onChange={(e) =>
+                        setFieldValue("password", e.target.value)
+                      }
+                      error={!!errors.password}
+                      helperText={errors.password}
+                      InputProps={{
+                        sx: { color: "black", width: "300px",marginLeft: "10px",marginTop:"7px"  },
+                        endAdornment: (
+                          <Button
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label={
+                              showPassword ? "Hide Password" : "Show Password"
+                            }
+                          >
+                            {showPassword ? "Hide" : "Show"}
+                          </Button>
+                        ),
+                      }}
+                    />
+                  </Box>
+                  <FormControlLabel
+                    control={<Checkbox id="remember-me" />}
+                    label="Remember Me"
+                    sx={{ color: "black" }}
+                  />
+                  <Link to="/">Forgot Password?</Link>
+                  
+                  <Button
+                    variant={isLoginLoading ? "outlined" : "contained"}
+                    color="primary"
+                    type="submit"
+                    disabled={isLoginLoading}
+                    onClick={() => handleLogin}
+                  >
+                  {isLoginLoading ? "Loading..." : loginError ? loginError : "Login"}
 
+                  </Button>
+                  <Typography variant="body1" color="#52525C">
+                    Or login to your account using
+                  </Typography>
+                  <Box display="flex" gap={8}>
+                    <img
+                      src="/assets/icons/google-icon.svg"
+                      alt="Google Icon"
+                    />
+                    <img
+                      src="/assets/icons/facebook-icon.svg"
+                      alt="Facebook Icon"
+                    />
+                  </Box>
+                </Box>
+              </Form>
+            )}
+          </Formik>
+        </Box>
+      </Box>
+    </Box>
+  </Box>
+);
+};
 export default Login;

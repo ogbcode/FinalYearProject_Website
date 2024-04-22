@@ -1,18 +1,50 @@
-import { Box } from "@mui/material";
+import { Box, IconButton, Snackbar } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { BASE_URL, USERID } from "../../config/config";
-
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
 const Manage = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [rows, setRows] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarSeverity, setSnackbarSeverity] =
+    useState<AlertProps["severity"]>("success"); // Specify the type of severity prop
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(BASE_URL + "/bot/" + id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete bot");
+      }
+      //@ts-ignore
+      setRows((prevRows) => prevRows.filter((row) => row.id !== id)); // Remove deleted bot from rows state
+      setSnackbarSeverity("success");
+      setSnackbarMessage("Bot deleted successfully");
+      setSnackbarOpen(true);
+    } catch (error) {
+      console.error("Error deleting bot:", error);
+      setSnackbarSeverity("error");
+      setSnackbarMessage("Failed to delete bot");
+      setSnackbarOpen(true);
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
   const columns = [
-     { field: "id", headerName: "ID", flex: 0.5 },
+    { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "name",
       headerName: "Name",
@@ -30,13 +62,13 @@ const Manage = () => {
       field: "deployment.domain",
       headerName: "Domain",
       flex: 1,
-      valueGetter: (params:any) => params.row.deployment?.domain || "", // Access nested property safely
+      valueGetter: (params: any) => params.row.deployment?.domain || "", // Access nested property safely
     },
     {
       field: "success_url",
       headerName: "Groupchat Link",
       flex: 1,
-},
+    },
 
     {
       field: "customersupport_telegram",
@@ -44,23 +76,31 @@ const Manage = () => {
       flex: 1,
     },
 
-    
     {
       field: "createdAt",
       headerName: "Date Created",
       flex: 1,
-      valueGetter: (params:any) => {
+      valueGetter: (params: any) => {
         const date = new Date(params.value);
         return date.toISOString().split("T")[0];
       },
     },
-
+    {
+      field: "actions",
+      headerName: "Delete",
+      flex: 1,
+      renderCell: (params: any) => (
+        <IconButton aria-label="delete" onClick={() => handleDelete(params.id)}>
+          <DeleteOutlineIcon />
+        </IconButton>
+      ),
+    },
   ];
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const response = await fetch(`${process.env.REACT_APP_BASEURL}/customers/user/79eb44a9-8745-4a15-af1d-12c6bd3d4aeb`);
-        const response = await fetch(BASE_URL+'/bot/user/'+USERID);
+        const response = await fetch(BASE_URL + "/bot/user/" + USERID);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -75,12 +115,8 @@ const Manage = () => {
     fetchData();
   }, []);
   return (
-    <Box m="20px" ml="280px"
-    >
-      <Header
-        title="MANAGE BOTS"
-        subtitle="List of deployed bots"
-      />
+    <Box m="20px" ml="280px">
+      <Header title="MANAGE BOTS" subtitle="List of deployed bots" />
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -113,6 +149,22 @@ const Manage = () => {
           },
         }}
       >
+        {" "}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            onClose={handleCloseSnackbar}
+            severity={snackbarSeverity}
+          >
+            {snackbarMessage}
+          </MuiAlert>
+        </Snackbar>
         <DataGrid
           checkboxSelection
           rows={rows}

@@ -1,49 +1,74 @@
-// import React from "react";
-import { Box, IconButton, useTheme} from "@mui/material";
-import { useContext } from "react";
+import  { useContext, useState } from "react";
+import { Box, IconButton, Menu, MenuItem, useTheme } from "@mui/material";
 import { ColorModeContext } from "../../theme";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-// import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-// import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Topbar = () => {
   const theme = useTheme();
-  // const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+
+    navigate("/login");
+    localStorage.removeItem('userId');
+    localStorage.removeItem('firstName');
+    localStorage.removeItem('lastName');
+    localStorage.removeItem('token');
+    localStorage.removeItem('isVerified');
+    handleClose();
+  };
+
+  // Check if the current location is the login page
+  const isLoginPage = location.pathname === "/login";
 
   return (
     <Box display="flex" alignItems="center" justifyContent="space-between" p={2}>
-    {/* Left Section */}
-    <Box>
-      {/* ... Your left section content ... */}
-    </Box>
-  
-    {/* Right Section */}
-    <Box display="flex" alignItems="center">
-      {/* Icons */}
-      <Box ml="auto">
-        <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
-            <DarkModeOutlinedIcon />
-          ) : (
-            <LightModeOutlinedIcon />
+      {/* Left Section */}
+      <Box>
+        {/* ... Your left section content ... */}
+      </Box>
+
+      {/* Right Section */}
+      <Box display="flex" alignItems="center">
+        {/* Icons */}
+        <Box ml="auto">
+          {/* Conditionally render the PersonOutlinedIcon based on the current location */}
+          {!isLoginPage && (
+            <IconButton onClick={handleClick}>
+              <PersonOutlinedIcon />
+            </IconButton>
           )}
-        </IconButton>
-        {/* <IconButton>
-          <NotificationsOutlinedIcon />
-        </IconButton> */}
-        {/* <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton> */}
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
+          <IconButton onClick={colorMode.toggleColorMode}>
+            {theme.palette.mode === "dark" ? (
+              <DarkModeOutlinedIcon />
+            ) : (
+              <LightModeOutlinedIcon />
+            )}
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
+        </Box>
       </Box>
     </Box>
-  </Box>
-  
   );
 };
 

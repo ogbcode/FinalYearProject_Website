@@ -1,12 +1,5 @@
 
 
-export interface UserStateProps {
-  id?: string;
-  firstName?: string;
-  middleName?: string;
-  lastName?: string;
-  auth?: AuthProps;
-}
 
 export interface LoginProps {
     email: string;
@@ -16,6 +9,7 @@ export interface LoginProps {
   export interface AuthProps {
     email?: string;
     isVerified?: boolean;
+    
   }
   
   export interface ErrorProps {
@@ -24,10 +18,8 @@ export interface LoginProps {
   }
 
   export interface UserProps {
-    id?: string;
+    userId?: string;
     firstName?: string;
-    middleName?: string;
     lastName?: string;
+  
   }
-
-

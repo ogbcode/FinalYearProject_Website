@@ -53,9 +53,8 @@ const Deploy = () => {
           ...(isCoinpaymentsCheckBoxActive ? {} : { coinpayment: undefined }),
           ...(isNowpaymentsCheckBoxActive ? {} : { nowpayment: undefined }),
           ...(isCryptoCheckBoxActive ? {} : { crypto_address: undefined }),
-          userId: "79eb44a9-8745-4a15-af1d-12c6bd3d4aeb",
-          subscription_benefits:
-            "⚡️Detailed Chart analysis\n⚡️2-4 Signals Daily\n⚡️Swing trades\n⚡️Day Trades\n⚡️Fundamental",
+          userId:localStorage.getItem("userId"),
+       
         };
   
         setIsDeployLoading(true);
@@ -356,6 +355,19 @@ const Deploy = () => {
                 name="success_url"
                 error={!!touched.success_url && !!errors.success_url}
                 helperText={touched.success_url && errors.success_url}
+                sx={{ gridColumn: "span 4" }}
+              />
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Subscription Benefits"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.subscription_benefits}
+                name="success_url"
+                error={!!touched.subscription_benefits && !!errors.subscription_benefits}
+                helperText={touched.subscription_benefits && errors.subscription_benefits}
                 sx={{ gridColumn: "span 4" }}
               />
               <Box>
@@ -824,6 +836,8 @@ const initialValues = {
     btc_address: "",
     usdt_address: "",
   },
+  subscription_benefits:"Exclusive VIP Group access⚡️"
+  
 };
 
 export default Deploy;
