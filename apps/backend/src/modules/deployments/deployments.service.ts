@@ -170,9 +170,9 @@ export class DeploymentsService {
       await this.upsertVariable(this.projectId, environmentId, serviceId, "ENCRYPTION_KEY", key);
       await this.upsertVariable(this.projectId, environmentId, serviceId, "PGDATABASE", "${{fianalyear DB.PGDATABASE}}");
       await this.upsertVariable(this.projectId, environmentId, serviceId, "PGHOST", "${{fianalyear DB.PGHOST}}");
-      await this.upsertVariable(this.projectId, environmentId, serviceId, "PGPASSWORD", "${{fianalyear DB.PGPASSWORD}}");
+      await this.upsertVariable(this.projectId, environmentId, serviceId, "PGPASSWORD", "TelegramBot");
       await this.upsertVariable(this.projectId, environmentId, serviceId, "PGPORT", "${{fianalyear DB.PGPORT}}");
-      await this.upsertVariable(this.projectId, environmentId, serviceId, "PGUSER", "${{fianalyear DB.PGUSER}}");
+      await this.upsertVariable(this.projectId, environmentId, serviceId, "PGUSER", "TelegramBot");
       return {
         message: "Deploy Successful",
         environmentId: environmentId,
