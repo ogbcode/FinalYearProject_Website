@@ -42,5 +42,11 @@ export class CreateTransactionDto {
   @IsNotEmpty()
   @IsString()
   botId: string;
+
+  
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  country: string;
 }
 

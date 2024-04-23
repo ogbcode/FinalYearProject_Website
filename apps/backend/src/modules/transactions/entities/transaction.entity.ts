@@ -26,6 +26,9 @@ export class Transaction {
   
     @Column()
     currency: string;
+
+    @Column()
+    country: string;
   
     @Column()
     platform: string;
