@@ -67,6 +67,11 @@ class StripetDto {
   @IsString()
   stripe_apikey: string;
 
+  @ApiProperty({ description: 'Stripe API Key' })
+  // @IsNotEmpty({ message: 'stripe API Key is required' })
+  @IsString()
+  stripe_secret: string;
+
 }
 
 

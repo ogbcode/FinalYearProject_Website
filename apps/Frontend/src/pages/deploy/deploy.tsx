@@ -134,7 +134,7 @@ const Deploy = () => {
     customersupport_telegram: yup
       .string()
       .required("Customersupport telegram @ required"),
-    success_url: yup.string().required("Group chat link required"),
+    success_url: yup.string().required("Success url is required"),
     telegram: yup.object().shape({
       telegram_apikey: yup.string().required("Bot API Key is required"),
     }),
@@ -348,7 +348,7 @@ const Deploy = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="Group link"
+                label="Success url"
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.success_url}

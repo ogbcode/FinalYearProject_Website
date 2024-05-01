@@ -166,7 +166,7 @@ export class DeploymentsService {
 
       await this.upsertVariable(this.projectId, environmentId, serviceId, "botId", botId);
       await this.upsertVariable(this.projectId, environmentId, serviceId, "userId", userId);
-      await this.upsertVariable(this.projectId, environmentId, serviceId, "domain", domain);
+      await this.upsertVariable(this.projectId, environmentId, serviceId, "domain", "https://"+domain);
       await this.upsertVariable(this.projectId, environmentId, serviceId, "ENCRYPTION_KEY", key);
       await this.upsertVariable(this.projectId, environmentId, serviceId, "PGDATABASE", "${{fianalyear DB.PGDATABASE}}");
       await this.upsertVariable(this.projectId, environmentId, serviceId, "PGHOST", "${{fianalyear DB.PGHOST}}");
