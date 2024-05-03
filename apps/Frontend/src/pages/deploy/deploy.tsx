@@ -21,7 +21,6 @@ import { tokens } from "../../theme";
 import { BASE_URL } from "../../config/config";
 
 const Deploy = () => {
- 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const colors = tokens(theme.palette.mode);
@@ -54,13 +53,12 @@ const Deploy = () => {
           ...(isCoinpaymentsCheckBoxActive ? {} : { coinpayment: undefined }),
           ...(isNowpaymentsCheckBoxActive ? {} : { nowpayment: undefined }),
           ...(isCryptoCheckBoxActive ? {} : { crypto_address: undefined }),
-          userId:localStorage.getItem("userId"),
-       
+          userId: localStorage.getItem("userId"),
         };
-  
+
         setIsDeployLoading(true);
         const success = await fetchData(filteredValues);
-  
+
         if (success) {
           setDeployStatus("success");
         } else {
@@ -86,7 +84,7 @@ const Deploy = () => {
       isCryptoCheckBoxActive,
     ]
   );
-  
+
   const fetchData = async (filteredValues: any): Promise<boolean> => {
     try {
       const response = await fetch(`${BASE_URL}/bot/create`, {
@@ -96,12 +94,12 @@ const Deploy = () => {
         },
         body: JSON.stringify(filteredValues),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to fetch data");
         // console.log(response)
       }
-  
+
       const data = await response.json();
       console.log(data);
       return true; // Assuming success
@@ -110,7 +108,6 @@ const Deploy = () => {
       return false; // Fetch failed
     }
   };
-  
 
   const checkoutSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
@@ -364,376 +361,430 @@ const Deploy = () => {
                 onChange={handleChange}
                 value={values.subscription_benefits}
                 name="subscription_benefits"
-                error={!!touched.subscription_benefits && !!errors.subscription_benefits}
-                helperText={touched.subscription_benefits && errors.subscription_benefits}
+                error={
+                  !!touched.subscription_benefits &&
+                  !!errors.subscription_benefits
+                }
+                helperText={
+                  touched.subscription_benefits && errors.subscription_benefits
+                }
                 sx={{ gridColumn: "span 4" }}
               />
-              <Box>
-                <Typography
-                  variant="h6"
-                  component="h6"
-                  gutterBottom
-                  sx={{ color: colors.greenAccent[300] }}
-                >
-                  Payment Methods
-                </Typography>
-              </Box>
-              <Box>
-                <Checkbox
-                  onClick={() => {
-                    setIsBinanceCheckBoxActive(!isBinanceCheckBoxActive);
-                    values.binance.binance_apikey = "";
-                    values.binance.binance_secretkey = "";
-                  }}
-                  color="success"
-                />
-                <span>Binance Pay</span>
-              </Box>
-              {isBinanceCheckBoxActive ? (
+              <Box width={isMobile?"70vw":undefined} >
                 <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Binance api key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.binance.binance_apikey}
-                    name="binance.binance_apikey"
-                    error={
-                      !!touched.binance?.binance_apikey &&
-                      !!errors.binance?.binance_apikey
-                    }
-                    helperText={
-                      touched.binance?.binance_apikey &&
-                      errors.binance?.binance_apikey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Binance secretkey"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.binance.binance_secretkey}
-                    name="binance.binance_secretkey"
-                    error={
-                      !!touched.binance?.binance_secretkey &&
-                      !!errors.binance?.binance_secretkey
-                    }
-                    helperText={
-                      touched.binance?.binance_secretkey &&
-                      errors.binance?.binance_secretkey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
+                  <Typography
+                    variant="h3"
+                    component="h6"
+                    gutterBottom
+                    sx={{ color: colors.greenAccent[300] }}
+                  >
+                    Payment Methods
+                  </Typography>
                 </Box>
-              ) : (
-                <></>
-              )}
-              <Box>
-                <Checkbox
-                  onClick={() => {
-                    setIsPaystackCheckBoxActive(!isPaystackCheckBoxActive);
+                <Box ml="10px">
+                  <Typography
+                    variant="h5"
+                    component="h6"
+                    gutterBottom
+                    sx={{ color: colors.greenAccent[300] }}
+                  >
+                    Bank payment methods
+                  </Typography>
+                </Box>
+                <Box>
+                  <Box display="flex" flexDirection={"row"} marginBottom="20px">
+                    <Box sx={{ alignItems: "center" }}>
+                      <Checkbox
+                        onClick={() => {
+                          setIsPaystackCheckBoxActive(
+                            !isPaystackCheckBoxActive
+                          );
 
-                    values.paystack.paystack_apikey = "";
-                    values.paystack.paystack_publickey = "";
-                  }}
-                  color="success"
-                />
-                <span>Paystack Pay</span>
-              </Box>
-              {isPaystackCheckBoxActive && (
-                <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Paystack API Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.paystack.paystack_apikey}
-                    name="paystack.paystack_apikey"
-                    error={
-                      touched.paystack?.paystack_apikey &&
-                      !!errors.paystack?.paystack_apikey
-                    }
-                    helperText={
-                      touched.paystack?.paystack_apikey &&
-                      errors.paystack?.paystack_apikey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Paystack Public Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.paystack.paystack_publickey}
-                    error={
-                      touched.paystack?.paystack_publickey &&
-                      !!errors.paystack?.paystack_publickey
-                    }
-                    helperText={
-                      touched.paystack?.paystack_publickey &&
-                      errors.paystack?.paystack_publickey
-                    }
-                    name="paystack.paystack_publickey"
-                    sx={{ gridColumn: "span 2" }}
-                  />
+                          values.paystack.paystack_apikey = "";
+                          values.paystack.paystack_publickey = "";
+                        }}
+                        color="success"
+                      />
+                      <span>Paystack</span>
+                    </Box>
+                    {isPaystackCheckBoxActive && (
+                      <Box
+                        sx={{
+                          // display: "flex",
+                          flexDirection: "column",
+                          marginLeft: "auto",
+                        }}
+                      >
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Paystack API Key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.paystack.paystack_apikey}
+                          name="paystack.paystack_apikey"
+                          error={
+                            touched.paystack?.paystack_apikey &&
+                            !!errors.paystack?.paystack_apikey
+                          }
+                          helperText={
+                            touched.paystack?.paystack_apikey &&
+                            errors.paystack?.paystack_apikey
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Paystack Public Key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.paystack.paystack_publickey}
+                          error={
+                            touched.paystack?.paystack_publickey &&
+                            !!errors.paystack?.paystack_publickey
+                          }
+                          helperText={
+                            touched.paystack?.paystack_publickey &&
+                            errors.paystack?.paystack_publickey
+                          }
+                          name="paystack.paystack_publickey"
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                      </Box>
+                    )}{" "}
+                  </Box>
+                  <Box display="flex" flexDirection={"row"}>
+                    <Box sx={{ alignItems: "center" }}>
+                      <Checkbox
+                        onClick={() => {
+                          setIsStripeCheckBoxActive(!isStripeCheckBoxActive);
+                          if (!isStripeCheckBoxActive) {
+                            // Clear form values when checkbox is unchecked
+                            handleChange({
+                              target: {
+                                name: "stripe.stripe_apikey",
+                                value: "",
+                              },
+                            });
+                          }
+                          values.stripe.stripe_apikey = "";
+                        }}
+                        color="success"
+                      />
+                      <span>Stripe</span>
+                    </Box>
+                    {isStripeCheckBoxActive && (
+                      <Box width="95%" marginLeft={"auto"}>
+                        <TextField
+                          fullWidth={true}
+                          variant="filled"
+                          type="text"
+                          label="Stripe API Key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.stripe.stripe_apikey}
+                          name="stripe.stripe_apikey"
+                          error={
+                            touched.stripe?.stripe_apikey &&
+                            !!errors.stripe?.stripe_apikey
+                          }
+                          helperText={
+                            touched.stripe?.stripe_apikey &&
+                            errors.stripe?.stripe_apikey
+                          }
+                          sx={{ gridColumn: "span3" }}
+                        />
+                      </Box>
+                    )}
+                  </Box>
                 </Box>
-              )}{" "}
-              <Box>
-                <Checkbox
-                  onClick={() => {
-                    setIsStripeCheckBoxActive(!isStripeCheckBoxActive);
-                    if (!isStripeCheckBoxActive) {
-                      // Clear form values when checkbox is unchecked
-                      handleChange({
-                        target: { name: "stripe.stripe_apikey", value: "" },
-                      });
-                    }
-                    values.stripe.stripe_apikey = "";
-                  }}
-                  color="success"
-                />
-                <span>Stripe</span>
-              </Box>
-              {isStripeCheckBoxActive && (
                 <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Stripe API Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.stripe.stripe_apikey}
-                    name="stripe.stripe_apikey"
-                    error={
-                      touched.stripe?.stripe_apikey &&
-                      !!errors.stripe?.stripe_apikey
-                    }
-                    helperText={
-                      touched.stripe?.stripe_apikey &&
-                      errors.stripe?.stripe_apikey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                </Box>
-              )}
-              {/* Coinpayments Pay Checkbox and fields */}
-              <Box>
-                <Checkbox
-                  onClick={() => {
-                    setIsCoinpaymentsCheckBoxActive(
-                      !isCoinpaymentsCheckBoxActive
-                    );
+                  <Box ml="10px" mt="10px"marginBottom="20px">
+                    <Typography
+                      variant="h5"
+                      component="h6"
+                      gutterBottom
+                      sx={{ color: colors.greenAccent[300] }}
+                    >
+                      Crypto payment methods
+                    </Typography>
+                  </Box>
+                  <Box display={"flex"} flexDirection={"row"} marginBottom="20px">
+                    <Box>
+                      <Checkbox
+                        onClick={() => {
+                          setIsBinanceCheckBoxActive(!isBinanceCheckBoxActive);
+                          values.binance.binance_apikey = "";
+                          values.binance.binance_secretkey = "";
+                        }}
+                        color="success"
+                      />
+                      <span>BinancePay</span>
+                    </Box>
+                    {isBinanceCheckBoxActive ? (
+                      <Box marginLeft={"13px"}>
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Binance api key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.binance.binance_apikey}
+                          name="binance.binance_apikey"
+                          error={
+                            !!touched.binance?.binance_apikey &&
+                            !!errors.binance?.binance_apikey
+                          }
+                          helperText={
+                            touched.binance?.binance_apikey &&
+                            errors.binance?.binance_apikey
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Binance secretkey"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.binance.binance_secretkey}
+                          name="binance.binance_secretkey"
+                          error={
+                            !!touched.binance?.binance_secretkey &&
+                            !!errors.binance?.binance_secretkey
+                          }
+                          helperText={
+                            touched.binance?.binance_secretkey &&
+                            errors.binance?.binance_secretkey
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                      </Box>
+                    ) : (
+                      <></>
+                    )}
+                  </Box>
+                  {/* Coinpayments Pay Checkbox and fields */}
+                  <Box display={"flex"} flexDirection={"row"} marginBottom="20px">
+                    <Box>
+                      <Checkbox
+                        onClick={() => {
+                          setIsCoinpaymentsCheckBoxActive(
+                            !isCoinpaymentsCheckBoxActive
+                          );
 
-                    values.coinpayment.coinpayment_apikey = "";
-                    values.coinpayment.coinpayment_publickey = "";
-                    values.coinpayment.coinpayment_merchantId = "";
-                    values.coinpayment.coinpayment_ipnsecret = "";
-                  }}
-                  color="success"
-                />
-                <span>Coinpayments Pay</span>
-              </Box>
-              {isCoinpaymentsCheckBoxActive && (
-                <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Coinpayments API Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.coinpayment.coinpayment_apikey}
-                    name="coinpayment.coinpayment_apikey"
-                    error={
-                      touched.coinpayment?.coinpayment_apikey &&
-                      !!errors.coinpayment?.coinpayment_apikey
-                    }
-                    helperText={
-                      touched.coinpayment?.coinpayment_apikey &&
-                      errors.coinpayment?.coinpayment_apikey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
+                          values.coinpayment.coinpayment_apikey = "";
+                          values.coinpayment.coinpayment_publickey = "";
+                          values.coinpayment.coinpayment_merchantId = "";
+                          values.coinpayment.coinpayment_ipnsecret = "";
+                        }}
+                        color="success"
+                      />
+                      <span>Coinpayments</span>
+                    </Box>
+                    {isCoinpaymentsCheckBoxActive && (
+                      <Box marginLeft="auto">
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Coinpayments API Key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.coinpayment.coinpayment_apikey}
+                          name="coinpayment.coinpayment_apikey"
+                          error={
+                            touched.coinpayment?.coinpayment_apikey &&
+                            !!errors.coinpayment?.coinpayment_apikey
+                          }
+                          helperText={
+                            touched.coinpayment?.coinpayment_apikey &&
+                            errors.coinpayment?.coinpayment_apikey
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
 
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Coinpayments Public Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    error={
-                      touched.coinpayment?.coinpayment_publickey &&
-                      !!errors.coinpayment?.coinpayment_publickey
-                    }
-                    helperText={
-                      touched.coinpayment?.coinpayment_publickey &&
-                      errors.coinpayment?.coinpayment_publickey
-                    }
-                    value={values.coinpayment.coinpayment_publickey}
-                    name="coinpayment.coinpayment_publickey"
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Coinpayments Merchant Id"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.coinpayment.coinpayment_merchantId}
-                    name="coinpayment.coinpayment_merchantId"
-                    error={
-                      touched.coinpayment?.coinpayment_merchantId &&
-                      !!errors.coinpayment?.coinpayment_merchantId
-                    }
-                    helperText={
-                      touched.coinpayment?.coinpayment_merchantId &&
-                      errors.coinpayment?.coinpayment_merchantId
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Coinpayments Ipn secret"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.coinpayment.coinpayment_ipnsecret}
-                    name="coinpayment.coinpayment_ipnsecret"
-                    error={
-                      touched.coinpayment?.coinpayment_ipnsecret &&
-                      !!errors.coinpayment?.coinpayment_ipnsecret
-                    }
-                    helperText={
-                      touched.coinpayment?.coinpayment_ipnsecret &&
-                      errors.coinpayment?.coinpayment_ipnsecret
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  {/* Add other Coinpayments fields here */}
-                </Box>
-              )}
-              {/* Now Payments Pay Checkbox and fields */}
-              <Box>
-                <Checkbox
-                  onClick={() => {
-                    setIsNowpaymentsCheckBoxActive(
-                      !isNowpaymentsCheckBoxActive
-                    );
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Coinpayments Public Key"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          error={
+                            touched.coinpayment?.coinpayment_publickey &&
+                            !!errors.coinpayment?.coinpayment_publickey
+                          }
+                          helperText={
+                            touched.coinpayment?.coinpayment_publickey &&
+                            errors.coinpayment?.coinpayment_publickey
+                          }
+                          value={values.coinpayment.coinpayment_publickey}
+                          name="coinpayment.coinpayment_publickey"
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Coinpayments Merchant Id"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.coinpayment.coinpayment_merchantId}
+                          name="coinpayment.coinpayment_merchantId"
+                          error={
+                            touched.coinpayment?.coinpayment_merchantId &&
+                            !!errors.coinpayment?.coinpayment_merchantId
+                          }
+                          helperText={
+                            touched.coinpayment?.coinpayment_merchantId &&
+                            errors.coinpayment?.coinpayment_merchantId
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        <TextField
+                          fullWidth
+                          variant="filled"
+                          type="text"
+                          label="Coinpayments Ipn secret"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          value={values.coinpayment.coinpayment_ipnsecret}
+                          name="coinpayment.coinpayment_ipnsecret"
+                          error={
+                            touched.coinpayment?.coinpayment_ipnsecret &&
+                            !!errors.coinpayment?.coinpayment_ipnsecret
+                          }
+                          helperText={
+                            touched.coinpayment?.coinpayment_ipnsecret &&
+                            errors.coinpayment?.coinpayment_ipnsecret
+                          }
+                          sx={{ gridColumn: "span 2" }}
+                        />
+                        {/* Add other Coinpayments fields here */}
+                      </Box>
+                    )}
+                  </Box>
+                  {/* Now Payments Pay Checkbox and fields */}
+                  <Box display={"flex"} flexDirection={"row"} marginBottom="20px">
+                  <Box>
+                    <Checkbox
+                      onClick={() => {
+                        setIsNowpaymentsCheckBoxActive(
+                          !isNowpaymentsCheckBoxActive
+                        );
 
-                    values.nowpayment.nowpayment_apikey = "";
-                    values.nowpayment.nowpayment_ipnsecret = "";
-                  }}
-                  color="success"
-                />
-                <span>Now Payments Pay</span>
-              </Box>
-              {isNowpaymentsCheckBoxActive && (
-                <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Now Payments API Key"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.nowpayment.nowpayment_apikey}
-                    name="nowpayment.nowpayment_apikey"
-                    error={
-                      touched.nowpayment?.nowpayment_apikey &&
-                      !!errors.nowpayment?.nowpayment_apikey
-                    }
-                    helperText={
-                      touched.nowpayment?.nowpayment_apikey &&
-                      errors.nowpayment?.nowpayment_apikey
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="Now Payments IPN Secret"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.nowpayment.nowpayment_ipnsecret}
-                    error={
-                      touched.nowpayment?.nowpayment_ipnsecret &&
-                      !!errors.nowpayment?.nowpayment_ipnsecret
-                    }
-                    helperText={
-                      touched.nowpayment?.nowpayment_ipnsecret &&
-                      errors.nowpayment?.nowpayment_ipnsecret
-                    }
-                    name="nowpayment.nowpayment_ipnsecret"
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  {/* Add other Now Payments fields here */}
+                        values.nowpayment.nowpayment_apikey = "";
+                        values.nowpayment.nowpayment_ipnsecret = "";
+                      }}
+                      color="success"
+                    />
+                    <span>NowPayments </span>
+                  </Box>
+                  {isNowpaymentsCheckBoxActive && (
+                    <Box>
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Now Payments API Key"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.nowpayment.nowpayment_apikey}
+                        name="nowpayment.nowpayment_apikey"
+                        error={
+                          touched.nowpayment?.nowpayment_apikey &&
+                          !!errors.nowpayment?.nowpayment_apikey
+                        }
+                        helperText={
+                          touched.nowpayment?.nowpayment_apikey &&
+                          errors.nowpayment?.nowpayment_apikey
+                        }
+                        sx={{ gridColumn: "span 2" }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="Now Payments IPN Secret"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.nowpayment.nowpayment_ipnsecret}
+                        error={
+                          touched.nowpayment?.nowpayment_ipnsecret &&
+                          !!errors.nowpayment?.nowpayment_ipnsecret
+                        }
+                        helperText={
+                          touched.nowpayment?.nowpayment_ipnsecret &&
+                          errors.nowpayment?.nowpayment_ipnsecret
+                        }
+                        name="nowpayment.nowpayment_ipnsecret"
+                        sx={{ gridColumn: "span 2" }}
+                      />
+                      {/* Add other Now Payments fields here */}
+                    </Box>
+                  )}
+                  </Box>
+                  <Box display={"flex"} flexDirection={"row"}>
+                  <Box>
+                    <Checkbox
+                      onClick={() =>
+                        setIsCryptoCheckBoxActive(!isCryptoCheckBoxActive)
+                      }
+                      color="success"
+                    />
+                    <span> CryptoAddress</span>
+                  </Box>
+                  {isCryptoCheckBoxActive && (
+                    <Box>
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="BTC Address"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.crypto_address.btc_address}
+                        name="crypto_address.btc_address"
+                        error={
+                          touched.crypto_address?.btc_address &&
+                          !!errors.crypto_address?.btc_address
+                        }
+                        helperText={
+                          touched.crypto_address?.btc_address &&
+                          errors.crypto_address?.btc_address
+                        }
+                        sx={{ gridColumn: "span 2" }}
+                      />
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        type="text"
+                        label="USDT Address"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        value={values.crypto_address.usdt_address}
+                        name="crypto_address.usdt_address"
+                        error={
+                          touched.crypto_address?.usdt_address &&
+                          !!errors.crypto_address?.usdt_address
+                        }
+                        helperText={
+                          touched.crypto_address?.usdt_address &&
+                          errors.crypto_address?.usdt_address
+                        }
+                        sx={{ gridColumn: "span 2" }}
+                      />
+                    </Box>
+                  )}
+                  </Box>
                 </Box>
-              )}
-              <Box>
-                <Checkbox
-                  onClick={() =>
-                    setIsCryptoCheckBoxActive(!isCryptoCheckBoxActive)
-                  }
-                  color="success"
-                />
-                <span>Crypto Address</span>
               </Box>
-              {isCryptoCheckBoxActive && (
-                <Box>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="BTC Address"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.crypto_address.btc_address}
-                    name="crypto_address.btc_address"
-                    error={
-                      touched.crypto_address?.btc_address &&
-                      !!errors.crypto_address?.btc_address
-                    }
-                    helperText={
-                      touched.crypto_address?.btc_address &&
-                      errors.crypto_address?.btc_address
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    type="text"
-                    label="USDT Address"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.crypto_address.usdt_address}
-                    name="crypto_address.usdt_address"
-                    error={
-                      touched.crypto_address?.usdt_address &&
-                      !!errors.crypto_address?.usdt_address
-                    }
-                    helperText={
-                      touched.crypto_address?.usdt_address &&
-                      errors.crypto_address?.usdt_address
-                    }
-                    sx={{ gridColumn: "span 2" }}
-                  />
-                </Box>
-              )}
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button
@@ -751,21 +802,19 @@ const Deploy = () => {
                     : "Error Deploying Bot"} */}
                   Bot
                 </DialogTitle>
-                <DialogContent  >
+                <DialogContent>
                   {isCreating ? (
                     <Box
                       display="flex"
                       alignItems="center"
                       justifyContent="center"
                       // sx={{ color:colors.primary,backgroundColor:colors.primary}}
-                      
                     >
                       <CircularProgress
                         color="success"
                         size={35}
                         value={29}
-                        sx={{ variant:"outlined"}}
-                       
+                        sx={{ variant: "outlined" }}
                       />
                       <Typography variant="body1" sx={{ marginLeft: 2 }}>
                         Creating...
@@ -834,8 +883,7 @@ const initialValues = {
     btc_address: "",
     usdt_address: "",
   },
-  subscription_benefits:"Exclusive VIP Group access⚡️"
-  
+  subscription_benefits: "Exclusive VIP Group access⚡️",
 };
 
 export default Deploy;

@@ -21,7 +21,7 @@ const StatBox = ({
   const colors = tokens(theme.palette.mode);
 
   return (
-    <Box width="100%" height="60%" m={isMobile ? "0 15px" : "0 30px"}> {/* Conditional margin based on isMobile */}
+    <Box width="100%" height="65%" m={isMobile ? "0 15px" : "0 30px"}> {/* Conditional margin based on isMobile */}
       <Box display="flex" justifyContent="space-between">
         <Box>
           {icon}
@@ -38,7 +38,7 @@ const StatBox = ({
         </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" mt="2px">
-        <Typography variant={isMobile ? "subtitle2" : "subtitle1"} sx={{ color: colors.greenAccent[500] }}> {/* Conditional font size based on isMobile */}
+        <Typography fontSize={isMobile?"10px":undefined} variant={isMobile ? "subtitle2" : "subtitle1"} sx={{ color: colors.greenAccent[500] }}> {/* Conditional font size based on isMobile */}
           {subtitle}
         </Typography>
         <Typography

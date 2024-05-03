@@ -131,16 +131,9 @@ const Sales = () => {
           rows={rows}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
-          // footer={{
-          //   renderFooter: () => (
-          //     <div style={{ display: "flex", justifyContent: "flex-end", paddingRight: "20px" }}>
-          //       {/* Display the total amount in the summary row */}
-          //       <Typography variant="h6" color="primary">
-          //         Total: $1000
-          //       </Typography>
-          //     </div>
-          //   ),
-          // }}
+          sx={{
+            fontSize:isMobile?"9px":undefined
+          }}
         />
       </Box>
     </Box>

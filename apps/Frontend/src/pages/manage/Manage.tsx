@@ -173,6 +173,9 @@ const Manage = () => {
           rows={rows}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
+          sx={{
+            fontSize:isMobile?"9px":undefined
+          }}
         />
       </Box>
     </Box>
