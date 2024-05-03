@@ -1,11 +1,11 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 // import { mockTransactions } from "../../data/mockData";
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+
+import SmartToyIcon from "@mui/icons-material/SmartToy";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardIcon from "@mui/icons-material/CreditCard";
 import Header from "../../components/Header";
 import LineChart from "../../components/Linechart";
 // import GeographyChart from "../../components/Geographychart";
@@ -29,7 +29,6 @@ const fetchData = async () => {
   }
 };
 
-
 async function amount() {
   const transactions = await fetchData();
 
@@ -48,22 +47,26 @@ async function amount() {
     December: 0,
   };
 
-  transactions.forEach((transaction: { amount: any; platform: any; createdAt: any; }) => {
-    const { amount, platform, createdAt } = transaction;
-    const month = new Date(createdAt).toLocaleString('en-US', { month: 'long' });
+  transactions.forEach(
+    (transaction: { amount: any; platform: any; createdAt: any }) => {
+      const { amount, platform, createdAt } = transaction;
+      const month = new Date(createdAt).toLocaleString("en-US", {
+        month: "long",
+      });
 
-    let parsedAmount = parseFloat(amount);
-    if (platform === 'Paystack') {
-      parsedAmount /= 1200; // Divide by 1200 if platform is Paystack
-    }
+      let parsedAmount = parseFloat(amount);
+      if (platform === "Paystack") {
+        parsedAmount /= 1200; // Divide by 1200 if platform is Paystack
+      }
 
-    if (Object.keys(monthlyAmount).includes(month)) {
-      monthlyAmount[month] += parsedAmount;
-    } else {
-      console.error(`Invalid month encountered: ${month}`);
+      if (Object.keys(monthlyAmount).includes(month)) {
+        monthlyAmount[month] += parsedAmount;
+      } else {
+        console.error(`Invalid month encountered: ${month}`);
+      }
     }
-  });
-  
+  );
+
   return monthlyAmount;
 }
 
@@ -72,7 +75,7 @@ function calculateTotalAmount(monthlyAmounts: any): number {
   for (const month in monthlyAmounts) {
     totalAmount += monthlyAmounts[month];
   }
-  const roundedNum = Math.round(totalAmount); 
+  const roundedNum = Math.round(totalAmount);
   return roundedNum;
 }
 const Dashboard = () => {
@@ -82,17 +85,16 @@ const Dashboard = () => {
   const [customersCount, setCustomersCount] = useState<string>("");
 
   const [botsCount, setBotsCount] = useState<string>("");
-  const[yearlyRevenue,setYearlyRevenue]=useState<number>(0)
+  const [yearlyRevenue, setYearlyRevenue] = useState<number>(0);
 
   useEffect(() => {
     const fetchDataAndGenerateData = async () => {
-      const Revenue=calculateTotalAmount(await amount())
+      const Revenue = calculateTotalAmount(await amount());
       setYearlyRevenue(Revenue); // Set data to empty array if mockLineData is null
     };
 
     fetchDataAndGenerateData();
   }, []);
-
 
   useEffect(() => {
     const transactionCount = async () => {
@@ -202,8 +204,14 @@ const Dashboard = () => {
     };
     fetchData();
   }, []);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box m="20px" ml={"300px"}>
+    <Box
+      width={isMobile ? "100vw" : "81vw"}
+      mr={isMobile ? "1vw" : "0.5vw"}
+      ml={isMobile ? "17.5vw" : "17.5vw"}
+    >
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
@@ -219,12 +227,15 @@ const Dashboard = () => {
         {/* ROW 1 */}
         <Box
           gridColumn="span 3"
+          width={isMobile ? "26vw" : undefined}
+          height={isMobile ? "12vh" : undefined}
           sx={{
             backgroundColor: colors.primary[400],
             display: "flex",
+
             alignItems: "center",
             justifyContent: "center",
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
         >
           <StatBox
@@ -232,6 +243,7 @@ const Dashboard = () => {
             subtitle="Total Sales"
             progress="0.75"
             increase="+14%"
+            isMobile={isMobile}
             icon={
               <CreditCardIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -241,12 +253,14 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
+          width={isMobile ? "26vw" : undefined}
+          height={isMobile ? "12vh" : undefined}
           sx={{
             backgroundColor: colors.primary[400],
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
         >
           <StatBox
@@ -254,6 +268,7 @@ const Dashboard = () => {
             subtitle="Total Clients"
             progress="0.30"
             increase="+5%"
+            isMobile={isMobile}
             icon={
               <PersonAddIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -263,12 +278,14 @@ const Dashboard = () => {
         </Box>
         <Box
           gridColumn="span 3"
+          width={isMobile ? "26vw" : undefined}
+          height={isMobile ? "12vh" : undefined}
           sx={{
             backgroundColor: colors.primary[400],
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
         >
           <StatBox
@@ -276,6 +293,7 @@ const Dashboard = () => {
             subtitle="Group Subscribers"
             progress="1"
             increase="+100%"
+            isMobile={isMobile}
             icon={
               <PointOfSaleIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -286,12 +304,14 @@ const Dashboard = () => {
 
         <Box
           gridColumn="span 3"
+          width={isMobile ? "26vw" : undefined}
+          height={isMobile ? "12vh" : undefined}
           sx={{
             backgroundColor: colors.primary[400],
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
         >
           <StatBox
@@ -299,6 +319,7 @@ const Dashboard = () => {
             subtitle="Bots Deployed"
             progress="0.80"
             increase=""
+            isMobile={isMobile}
             icon={
               <SmartToyIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -307,22 +328,26 @@ const Dashboard = () => {
           />
         </Box>
 
-
         {/* ROW 2 */}
         <Box
           gridColumn="span 8"
           gridRow="span 2"
+          mt={isMobile ? "-2.5rem" : undefined}
+          mr={isMobile ? "20vw" : undefined}
+          mb={isMobile ? "6vh" : undefined}
           sx={{
             backgroundColor: colors.primary[400],
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
+          // height="20vh"
         >
           <Box
-            mt="25px"
+            mt={isMobile ? "2rem" : "25px"}
             p="0 30px"
             display="flex "
             justifyContent="space-between"
             alignItems="center"
+            width={isMobile ? "100%" : undefined}
           >
             <Box>
               <Typography
@@ -340,15 +365,13 @@ const Dashboard = () => {
                 ${yearlyRevenue.toLocaleString()}
               </Typography>
             </Box>
-            <Box>
-              <IconButton>
-                <DownloadOutlinedIcon
-                  sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                />
-              </IconButton>
-            </Box>
           </Box>
-          <Box height="250px" m="-20px 0 0 0">
+          <Box
+            height={"250px"}
+            width={isMobile ? "60vw" : undefined}
+            m="-20px 0 0 0"
+            fontSize="10px"
+          >
             <LineChart isDashboard={true} />
           </Box>
         </Box>
@@ -360,7 +383,11 @@ const Dashboard = () => {
             backgroundColor: colors.primary[400],
             overflow: "auto",
             height: "39rem",
-            borderRadius:"10px"
+            width: isMobile ? "16rem" : "28rem",
+            borderRadius: "10px",
+            mt: isMobile ? "-2.56rem" : undefined,
+            ml: isMobile ? "-5.7rem" : undefined,
+            // zIndex:"3"
           }}
         >
           <Box
@@ -370,7 +397,6 @@ const Dashboard = () => {
             borderBottom={`6px solid ${colors.primary[500]}`}
             color={colors.grey[100]}
             p="18px"
-
           >
             <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
               Recent Transactions
@@ -396,12 +422,14 @@ const Dashboard = () => {
                 >
                   {transaction.id}
                 </Typography> */}
-                <Typography color={colors.grey[100]}>
+                <Typography fontSize={isMobile?"10px":undefined} color={colors.grey[100]}>
                   {transaction.customer.firstName}
                 </Typography>
               </Box>
               <Box color={colors.grey[100]}>
+              <Typography fontSize={isMobile?"10px":undefined}>
                 {new Date(transaction.createdAt).toISOString().split("T")[0]}
+                </Typography>
               </Box>
               <Box
                 sx={{
@@ -410,49 +438,58 @@ const Dashboard = () => {
                 p="5px 10px"
                 borderRadius="4px"
               >
+                <Typography fontSize={isMobile?"10px":undefined}>
                 {transaction.platform === "Paystack" ? "₦" : "$"}
                 {transaction.amount}
+                </Typography>
               </Box>
             </Box>
           ))}
         </Box>
 
         {/* ROW 3 */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          p="30px"
-          sx={{
-            backgroundColor: colors.primary[400],
-            borderRadius:"10px"
-          }}
-        >
-          <Typography variant="h5" fontWeight="600">
-            Campaign
-          </Typography>
+        {isMobile ? undefined : (
           <Box
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            mt="25px"
+            gridColumn="span 4"
+            gridRow="span 2"
+            p="30px"
+            sx={{
+              backgroundColor: colors.primary[400],
+              borderRadius: "10px",
+            }}
           >
-            <ProgressCircle size="125" />
-            <Typography
-              variant="h5"
-              color={colors.greenAccent[500]}
-              sx={{ mt: "15px" }}
-            >
-              ${yearlyRevenue.toLocaleString()} revenue generated
+            <Typography variant="h5" fontWeight="600">
+              Campaign
             </Typography>
-            <Typography>Includes extra misc expenditures and costs</Typography>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              mt="25px"
+            >
+              <ProgressCircle size={isMobile ? "70" : "125"} />
+              <Typography
+                variant="h5"
+                color={colors.greenAccent[500]}
+                sx={{ mt: "15px" }}
+              >
+                ${yearlyRevenue.toLocaleString()} revenue generated
+              </Typography>
+              <Typography>
+                Includes extra misc expenditures and costs
+              </Typography>
+            </Box>
           </Box>
-        </Box>
+        )}
         <Box
-          gridColumn="span 4"
+          gridColumn={isMobile ? "span 6" : "span 4"}
           gridRow="span 2"
+          mt={isMobile ? "-50px" : undefined}
+          mb={isMobile ? "40px" : undefined}
+          // width={isMobile?"20rem":undefined}
           sx={{
             backgroundColor: colors.primary[400],
-            borderRadius:"10px"
+            borderRadius: "10px",
           }}
         >
           <Typography
@@ -462,27 +499,16 @@ const Dashboard = () => {
           >
             Sales Quantity
           </Typography>
-          <Box height="250px" mt="-20px"  color="black">
+          <Box
+            height={isMobile?"280px":"250px"}
+            width={isMobile ? "92vw" : "110%"}
+            mt="-20px"
+            ml={isMobile ? "-30px" : undefined}
+            color="black"
+          >
             <BarChart isDashboard={true} />
           </Box>
         </Box>
-        {/* <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          padding="30px"
-        >
-          <Typography
-            variant="h5"
-            fontWeight="600"
-            sx={{ marginBottom: "15px" }}
-          >
-            Geography Based Traffic
-          </Typography>
-          <Box height="200px">
-            <GeographyChart isDashboard={true} />
-          </Box>
-        </Box> */}
       </Box>
     </Box>
   );

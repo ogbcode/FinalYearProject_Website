@@ -1,4 +1,4 @@
-import { Box, IconButton, Snackbar } from "@mui/material";
+import { Box, IconButton, Snackbar, useMediaQuery } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -114,8 +114,10 @@ const Manage = () => {
 
     fetchData();
   }, []);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box m="20px" ml="280px">
+    <Box  mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
       <Header title="MANAGE BOTS" subtitle="List of deployed bots" />
       <Box
         m="40px 0 0 0"
@@ -166,6 +168,7 @@ const Manage = () => {
           </MuiAlert>
         </Snackbar>
         <DataGrid
+        
           checkboxSelection
           rows={rows}
           columns={columns}

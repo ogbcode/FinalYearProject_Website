@@ -1,5 +1,6 @@
 import { createContext, useState, useMemo, useEffect } from "react";
-import { Theme, createTheme } from "@mui/material/styles";
+import { Theme, createTheme, useTheme } from "@mui/material/styles";
+import { useMediaQuery } from "@mui/material";
 type ColorMode = "dark" | "light";
 // color design tokens export
 export const tokens = (mode: ColorMode) => ({
@@ -123,6 +124,9 @@ export const tokens = (mode: ColorMode) => ({
 // mui theme settings
 export const themeSettings = (mode: ColorMode) => {
   const colors = tokens(mode);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return {
     palette: {
       mode: mode,
@@ -167,31 +171,28 @@ export const themeSettings = (mode: ColorMode) => {
       fontSize: 12,
       h1: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 40,
+        fontSize: isMobile ? 32 : 40,
       },
       h2: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 32,
+        fontSize: isMobile ? 24 : 32,
       },
       h3: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 24,
+        fontSize: isMobile ? 20 : 24,
       },
       h4: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 20,
+        fontSize: isMobile ? 16 : 20,
       },
       h5: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 16,
+        fontSize: isMobile ? 14 : 16,
       },
       h6: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: 14,
-      },
-      //   body1: {
-      //   color: "#000000", // Set text color to black for body text
-      // },
+        fontSize: isMobile ? 12 : 14,
+      }
     },
   };
 };

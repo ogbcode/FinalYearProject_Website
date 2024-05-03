@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import { DataGrid, GridAlignment, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -61,8 +61,10 @@ const Customers = () => {
 
     fetchData();
   }, []);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box m="20px" ml="280px">
+    <Box mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
       <Header
         title="CUSTOMERS"
         subtitle="List of telegram users who have used your bot"

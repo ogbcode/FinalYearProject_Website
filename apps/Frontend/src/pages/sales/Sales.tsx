@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -89,8 +89,10 @@ const Sales = () => {
     };
     fetchData();
   }, []);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <Box m="20px" ml="290px">
+    <Box mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
       <Header title="SALES" subtitle="List of sales made" />
       <Box
         m="40px 0 0 0"

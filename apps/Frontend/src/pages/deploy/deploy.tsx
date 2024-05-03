@@ -21,8 +21,9 @@ import { tokens } from "../../theme";
 import { BASE_URL } from "../../config/config";
 
 const Deploy = () => {
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+ 
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const colors = tokens(theme.palette.mode);
   const [isDeployLoading, setIsDeployLoading] = useState(false);
   const [isPaystackCheckBoxActive, setIsPaystackCheckBoxActive] =
@@ -197,7 +198,7 @@ const Deploy = () => {
     }),
   });
   return (
-    <Box m="20px" ml={"300px"}>
+    <Box mr={isMobile ? "2vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
       <Header title="CREATE BOT" subtitle="Create and deploy a new bot" />
 
       <Formik
@@ -211,9 +212,6 @@ const Deploy = () => {
               display="grid"
               gap="30px"
               gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
-              }}
             >
               <TextField
                 fullWidth
@@ -365,7 +363,7 @@ const Deploy = () => {
                 onBlur={handleBlur}
                 onChange={handleChange}
                 value={values.subscription_benefits}
-                name="success_url"
+                name="subscription_benefits"
                 error={!!touched.subscription_benefits && !!errors.subscription_benefits}
                 helperText={touched.subscription_benefits && errors.subscription_benefits}
                 sx={{ gridColumn: "span 4" }}

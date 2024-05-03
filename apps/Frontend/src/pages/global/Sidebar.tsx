@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { Box,  Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -14,18 +14,20 @@ import GroupIcon from '@mui/icons-material/Group';
 import PublicIcon from '@mui/icons-material/Public';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
 const Item = ({
-        title,
-        to,
-        icon,
-        selected,
-        setSelected,
-      }: {
-        title: string;
-        to: string;
-        icon: React.ReactNode;
-        selected: string;
-        setSelected: Dispatch<SetStateAction<string>>; // Explicitly define the type
-      }) => {
+  title,
+  to,
+  icon,
+  selected,
+  setSelected,
+  isMobile
+}: {
+  title: string;
+  to: string;
+  icon: React.ReactNode;
+  selected: string;
+  setSelected: Dispatch<SetStateAction<string>>; // Explicitly define the type
+  isMobile: boolean;
+}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -35,7 +37,8 @@ const Item = ({
         color: colors.grey[100],
       }}
       onClick={() => setSelected(title)}
-      icon={icon}
+      icon={isMobile ? <span style={{ marginRight: "10px" }}>{icon}</span> : icon}
+    
     >
       <Typography>{title}</Typography>
       <Link to={to} />
@@ -46,23 +49,27 @@ const Item = ({
 const Sidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  //@ts-ignore
+  const [isCollapsed, setIsCollapsed] = useState(isMobile?true:false);
   const [selected, setSelected] = useState("Dashboard");
 
-  // const [isLoading, setIsLoading] = useState(true);
- 
+
   return (
-  <Box
+    <Box
       sx={{
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,
+          width:isMobile ?"15vw":undefined,
+          
         },
         "& .pro-icon-wrapper": {
           backgroundColor: "transparent !important",
         },
         "& .pro-inner-item": {
-          padding: "5px 20px !important", // Reduce horizontal padding
-          margin: "5px 0 !important", // Reduce vertical margin
+          // padding: "6px 20px !important",
+          ml:"5px", // Reduce horizontal padding
+          margin: isMobile ? "15px 0 !important" : "5px 0 !important", // Reduce vertical margin
         },
         "& .pro-inner-item:hover": {
           color: "#868dfb !important",
@@ -74,14 +81,14 @@ const Sidebar = () => {
       position={"fixed"}
       height={"100vh"}
     >
-      <ProSidebar collapsed={isCollapsed}>
+      <ProSidebar  collapsed={isMobile?true:isCollapsed}>
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
-          <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
+         {isMobile?undefined: <MenuItem
+            // onClick={() => setIsCollapsed(!isCollapsed)}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
-              margin: "10px 0 20px 0",
+              margin: "30px 0 20px 0",
               color: colors.grey[100],
             }}
           >
@@ -95,12 +102,12 @@ const Sidebar = () => {
                 <Typography variant="h3" color={colors.grey[100]}>
                  
                 </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                {/* <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
                   <MenuOutlinedIcon />
-                </IconButton>
+                </IconButton> */}
               </Box>
             )}
-          </MenuItem>
+          </MenuItem>}
           {!isCollapsed && (
             <Box mb="25px">
               <Box display="flex" justifyContent="center" alignItems="center">
@@ -129,18 +136,21 @@ const Sidebar = () => {
           )}
 
           <Box paddingLeft={isCollapsed ? undefined : "10%"}>
+            
             <Item
               title="Dashboard"
               to="/dashboard"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
 
             <Typography
               variant="h6"
               color={colors.grey[300]}
-              sx={{ m: "15px 0 5px 20px" }}
+              m= {isMobile?"6px":"15px 0 5px 20px"}
+              // sx={{ m: "15px 0 5px 20px" }}
             >
               Analytics
             </Typography>
@@ -150,20 +160,23 @@ const Sidebar = () => {
               icon={<InsightsIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
-             <Item
+            <Item
               title="Customers"
               to="/customers"
               icon={<GroupIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
-              <Item
+            <Item
               title="Subscribers"
               to="/subscribers"
               icon={<CardMembershipIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
             <Item
               title="Geography"
@@ -171,8 +184,8 @@ const Sidebar = () => {
               icon={<PublicIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
-           
 
             <Typography
               variant="h6"
@@ -187,13 +200,15 @@ const Sidebar = () => {
               icon={<RocketLaunchIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
             <Item
               title="Manage"
               to="/manage"
-              icon={<SmartToyIcon/>}
+              icon={<SmartToyIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
             <Item
               title="FAQ Page"
@@ -201,8 +216,8 @@ const Sidebar = () => {
               icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
+              isMobile={isMobile}
             />
-
           </Box>
         </Menu>
       </ProSidebar>
@@ -211,5 +226,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
-

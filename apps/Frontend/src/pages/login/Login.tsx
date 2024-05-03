@@ -1,7 +1,7 @@
 import { LoginProps } from "../store/interfaces/user.interface";
 import { Checkbox } from "flowbite-react";
 import { Form, Formik } from "formik";
-import { useCallback, useState} from "react";
+import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { BASE_URL } from "../../config/config";
@@ -11,8 +11,10 @@ import {
   FormControlLabel,
   TextField,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import Header from "../../components/Header";
+import { useTheme } from "@mui/material";
 // import { AuthContext } from "../store/interfaces/auth";
 
 export const loadUser = async (token: any) => {
@@ -20,36 +22,35 @@ export const loadUser = async (token: any) => {
     const response = await fetch(`${BASE_URL}/users/user/verify`, {
       method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'x-access-token': token,
+        "Content-Type": "application/json",
+        "x-access-token": token,
       },
     });
 
     if (response.status !== 200) {
-      throw new Error('Failed to fetch user data');
+      throw new Error("Failed to fetch user data");
     }
-    
-    
+
     const userData = await response.json();
-    localStorage.setItem('userId', userData.id);
-    localStorage.setItem('firstName', userData.firstName);
-    localStorage.setItem('lastName', userData.lastName);
-    localStorage.setItem('isVerified', "True");
+    localStorage.setItem("userId", userData.id);
+    localStorage.setItem("firstName", userData.firstName);
+    localStorage.setItem("lastName", userData.lastName);
+    localStorage.setItem("isVerified", "True");
     return true;
   } catch (error) {
     console.error(error);
-    
-    throw new Error('Failed to load user data'+error);
-    
+
+    throw new Error("Failed to load user data" + error);
   }
 };
 
 const Login = () => {
   // const navigate = useNavigate();
-
+  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(""); // State for login error
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
@@ -59,11 +60,7 @@ const Login = () => {
     email: Yup.string().required("Insert your email"),
     password: Yup.string().required("Insert your password"),
   });
- 
 
-
-
-  
   const login = async (credentials: LoginProps) => {
     try {
       const response = await fetch(BASE_URL + "/auth/login", {
@@ -73,12 +70,12 @@ const Login = () => {
         },
         body: JSON.stringify(credentials),
       });
-    
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Login failed");
       }
-      
+
       // setIsLoggedIn(true);
       return response.json();
     } catch (error) {
@@ -86,116 +83,137 @@ const Login = () => {
       throw new Error("Login failed");
     }
   };
-  
-  const handleLogin = useCallback(
-    async (props: LoginProps) => {
-      try {
-        setIsLoginLoading(true);
-        const response = await login(props);
-        if (response.access_token) {
-          localStorage.setItem("token", response.access_token);
-          await loadUser(response.access_token)
-          navigate("/dashboard");
-        } else {
-          throw new Error("No access token");
-        }
-      } catch (error) {
-        setLoginError("Login failed. Please check your credentials."); 
-        console.log(error);
-      }
-      setIsLoginLoading(false);
-    },
-    []
-  );
-  
 
-return (
-  <Box
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-    height="83vh"
-    px={4}
-  >
+  const handleLogin = useCallback(async (props: LoginProps) => {
+    try {
+      setIsLoginLoading(true);
+      const response = await login(props);
+      if (response.access_token) {
+        localStorage.setItem("token", response.access_token);
+        await loadUser(response.access_token);
+        navigate("/dashboard");
+      } else {
+        throw new Error("No access token");
+      }
+    } catch (error) {
+      setLoginError("Login failed. Please check your credentials.");
+      console.log(error);
+    }
+    setIsLoginLoading(false);
+  }, []);
+
+  return (
     <Box
       display="flex"
-      flexDirection={{ xs: "column", md: "row" }}
       justifyContent="center"
       alignItems="center"
-      height="100%"
-      width="95%"
+      height={isMobile?"100vh":"90vh"}
+      px={isMobile ? 0: 4}
+      // marginBottom={"30px"}
     >
       <Box
-        display={{ xs: "none", md: "flex" }}
-        justifyContent="center"
-        p={8}
-        maxWidth="60%"
-        flexDirection={"column"}
-        marginBottom="10vh"
-      >
-        <Header 
-          title="TELEBOT SOLUTIONS"
-          subtitle="Automate Your telegram Business"
-          // style={{ position: "absolute", bottom: "50px" }}
-        />
-        <img
-          src="/assets/icons/telegram.png"
-          alt="login illustration"
-          className="h-full"
-          style={{ width: "90%", height: "auto" }}
-        />
-      </Box>
-      <Box
         display="flex"
+        flexDirection={isMobile ? "column" : "row"}
         justifyContent="center"
         alignItems="center"
-        width="35%"
-        maxWidth="50%"
-        // maxHeight="70%"
-        bgcolor="#F8F8F8"
-        borderRadius={20}
-        p={8}
+        height={isMobile?"100%%":"100%"}
+        width="100%"
+    
+        marginTop={isMobile ? "-30vh" : undefined}
       >
+        {!isMobile && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            p={8}
+            maxWidth="60%"
+            flexDirection="column"
+            marginBottom="10vh"
+          >
+            <Header
+              title="TELEBOT SOLUTIONS"
+              subtitle="Automate Your telegram Business"
+            />
+            <img
+              src="/assets/icons/telegram.png"
+              alt="login illustration"
+              className="h-full"
+              style={{ width: "90%", height: "auto" }}
+            />
+          </Box>
+        )}
+        {isMobile && (
+          <Box
+            display="flex"
+            justifyContent="center"
+            p={5}
+            maxWidth="60%"
+            flexDirection="column"
+            marginBottom="10vh"
+            marginLeft="25vw"
+          >
+            <Box display="flex" alignItems="center" justifyContent="flex-end">
+              <img
+                src="/assets/icons/telegram.png"
+                alt="login illustration"
+                className="h-full"
+                style={{ width: "90%", height: "70%", marginRight: "20px" }}
+              />
+              <Header
+                title="TELEBOT SOLUTIONS"
+                subtitle="Automate Your telegram Business"
+              />
+            </Box>
+          </Box>
+        )}
+
         <Box
           display="flex"
-          flexDirection="column"
+          justifyContent="center"
           alignItems="center"
-          width="auto"
-          // maxHeight={"40%"}
-          gap={3}
+          width={isMobile ? "90%" : "30%"}
+          bgcolor="#F8F8F8"
+          borderRadius={20}
+          p={3}
+          // marginBottom={isMobile ? "37vh" : undefined} // Adjusted marginBottom
+          marginTop={isMobile ? "-13vh" : undefined}
         >
-          <Typography variant="h4" color="primary" fontWeight="bold">
-            LOGIN
-          </Typography>
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            validationSchema={LoginSchema}
-            onSubmit={(values) => {
-              handleLogin(values);
-            }}
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            width="100%"
+            gap={isMobile ? -2 : 3}
+            height={isMobile ? "50vh" : undefined}
+            // marginBottom={isMobile?"30vh":undefined}
           >
-            {({ errors, values, setFieldValue }) => (
-              <Form>
-                <Box display="flex" flexDirection="column" gap={2} alignItems="right">
-                <Box display="flex" alignItems="center">
+            <Typography variant="h4" color="primary" fontWeight="bold">
+              LOGIN
+            </Typography>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              validationSchema={LoginSchema}
+              onSubmit={(values) => {
+                handleLogin(values);
+              }}
+            >
+              {({ errors, values, setFieldValue }) => (
+                <Form>
+                  <Box display="flex" flexDirection="column" gap={2}>
                     <Typography variant="body1" color="#52525C" fontSize="xl">
                       Email
                     </Typography>
                     <TextField
                       variant="outlined"
                       type="email"
-                      onChange={(e) =>
-                        setFieldValue("email", e.target.value)
-                      }
+                      onChange={(e) => setFieldValue("email", e.target.value)}
                       placeholder="Your email address"
                       error={!!errors.email}
                       helperText={errors.email}
                       InputProps={{
-                        sx: { color: "black" , width: "300px", marginLeft: "33px",marginTop:"7px" },
+                        sx: { color: "black" },
                       }}
                     />
-                  </Box>
-                  <Box display="flex" alignItems="center">
                     <Typography variant="body1" color="#52525C" fontSize="xl">
                       Password
                     </Typography>
@@ -212,7 +230,7 @@ return (
                       error={!!errors.password}
                       helperText={errors.password}
                       InputProps={{
-                        sx: { color: "black", width: "300px",marginLeft: "10px",marginTop:"7px"  },
+                        sx: { color: "black" },
                         endAdornment: (
                           <Button
                             onClick={() => setShowPassword(!showPassword)}
@@ -225,45 +243,55 @@ return (
                         ),
                       }}
                     />
-                  </Box>
-                  <FormControlLabel
-                    control={<Checkbox id="remember-me" />}
-                    label="Remember Me"
-                    sx={{ color: "black" }}
-                  />
-                  <Link to="/">Forgot Password?</Link>
-                  
-                  <Button
-                    variant={isLoginLoading ? "outlined" : "contained"}
-                    color="primary"
-                    type="submit"
-                    disabled={isLoginLoading}
-                    onClick={() => handleLogin}
-                  >
-                  {isLoginLoading ? "Loading..." : loginError ? loginError : "Login"}
-
-                  </Button>
-                  <Typography variant="body1" color="#52525C">
-                    Or login to your account using
-                  </Typography>
-                  <Box display="flex" gap={8}>
-                    <img
-                      src="/assets/icons/google-icon.svg"
-                      alt="Google Icon"
+                    <FormControlLabel
+                      control={<Checkbox id="remember-me" />}
+                      label="Remember Me"
+                      sx={{ color: "black" }}
                     />
-                    <img
-                      src="/assets/icons/facebook-icon.svg"
-                      alt="Facebook Icon"
-                    />
+                    <Link to="/">Forgot Password?</Link>
+                    <Button
+                      variant={isLoginLoading ? "outlined" : "contained"}
+                      color="primary"
+                      type="submit"
+                      disabled={isLoginLoading}
+                    >
+                      {isLoginLoading
+                        ? "Loading..."
+                        : loginError
+                          ? loginError
+                          : "Login"}
+                    </Button>
+                    <Typography variant="body1" color="#52525C">
+                      Or login to your account using
+                    </Typography>
+                    <Box
+                      display="flex"
+                      gap={6}
+                      justifyContent={isMobile ? "flex-end" : "center"} // Move to right on mobile
+                      width={isMobile ? "100%" : undefined}
+                      marginTop={isMobile?"-2vh":undefined}
+                      marginLeft={isMobile?"-10vh":undefined}
+                    >
+                      <img
+                        src="/assets/icons/google-icon.svg"
+                        alt="Google Icon"
+                        style={{ width: isMobile ? "25px" : "auto" }}
+                      />
+                      <img
+                        src="/assets/icons/facebook-icon.svg"
+                        alt="Facebook Icon"
+                        style={{ width: isMobile ? "30px" : "auto" }}
+                      />
+                    </Box>
                   </Box>
-                </Box>
-              </Form>
-            )}
-          </Formik>
+                </Form>
+              )}
+            </Formik>
+          </Box>
         </Box>
       </Box>
     </Box>
-  </Box>
-);
+  );
 };
+
 export default Login;

@@ -26,7 +26,7 @@ export class DeploymentsService {
         projectId: this.projectId,
         serviceId: deployedBot.serviceId,
         environmentId: deployedBot.environmentId,
-        domain: deployedBot.domain,
+        domain: "https://"+deployedBot.domain,
       };
       const newDeployment = this.deployRepository.create(deployProps);
       const savedDeployment = await this.deployRepository.save(newDeployment);

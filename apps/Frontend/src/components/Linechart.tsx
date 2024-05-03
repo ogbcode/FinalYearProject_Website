@@ -1,5 +1,5 @@
 import { ResponsiveLine } from "@nivo/line";
-import { useTheme } from "@mui/material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 // import { mockLineData as data } from "../data/mockData";
 import { BASE_URL} from "../config/config";
@@ -71,13 +71,13 @@ const generateMockLineData = async (): Promise<LineChartData[]> => {
       id: "Sales",
       color: tokens("dark").greenAccent[500],
       data: [
-        { x: "January", y: monthlyAmount.January },
-        { x: "February", y: monthlyAmount.February },
-        { x: "March", y: monthlyAmount.March },
-        { x: "April", y: monthlyAmount.April },
+        { x: "Jan", y: monthlyAmount.January },
+        { x: "Feb", y: monthlyAmount.February },
+        { x: "Mar", y: monthlyAmount.March },
+        { x: "Apr", y: monthlyAmount.April },
         { x: "May", y: monthlyAmount.May },
-        { x: "June", y: monthlyAmount.June },
-        { x: "July", y: monthlyAmount.July },
+        { x: "Jun", y: monthlyAmount.June },
+        { x: "Jul", y: monthlyAmount.July },
         // { x: "August", y: monthlyAmount.August },
         // { x: "September", y: monthlyAmount.September },
         // { x: "October", y: monthlyAmount.October },
@@ -112,6 +112,8 @@ const LineChart = ({
 
     fetchDataAndGenerateData();
   }, []);
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Added isMobile
+
   return (
     <ResponsiveLine
       data={data}
@@ -149,7 +151,7 @@ const LineChart = ({
         },
       }}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }} // added
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={isMobile ? { top: 50, right: 20, bottom: 50, left: 40 } : { top: 50, right: 110, bottom: 50, left: 60 }} 
       xScale={{ type: "point" }}
       yScale={{
         type: "linear",
@@ -166,7 +168,7 @@ const LineChart = ({
         tickSize: 0,
         tickPadding: 5,
         tickRotation: 0,
-        legend: isDashboard ? undefined : "transportation", // added
+        // legend: isDashboard ? undefined : "transportation", // added
         legendOffset: 36,
         legendPosition: "middle",
       }}
