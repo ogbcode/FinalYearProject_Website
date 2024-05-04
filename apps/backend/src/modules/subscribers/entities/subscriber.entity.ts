@@ -30,7 +30,7 @@ export class Subscriber{
 
 
   
-  @ManyToOne(() => Bot, (bot) => bot.subscriber)
+  @ManyToOne(() => Bot, (bot) => bot.subscriber ,{ onDelete: 'CASCADE'})
   @JoinColumn()
   bot: Bot;
   

@@ -26,7 +26,7 @@ export class Customer {
   @OneToMany(() => Transaction, (transaction) => transaction.customer,{ onDelete: 'CASCADE'})
   transaction:Transaction ;
   
-  @ManyToOne(() => Bot, bot => bot.customer)
+  @ManyToOne(() => Bot, bot => bot.customer, { onDelete: 'CASCADE'})
   @JoinColumn()
   bot: Bot;
   

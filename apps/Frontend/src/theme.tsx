@@ -1,6 +1,6 @@
 import { createContext, useState, useMemo, useEffect } from "react";
-import { Theme, createTheme, useTheme } from "@mui/material/styles";
-import { useMediaQuery } from "@mui/material";
+import { Theme, createTheme } from "@mui/material/styles";
+
 type ColorMode = "dark" | "light";
 // color design tokens export
 export const tokens = (mode: ColorMode) => ({
@@ -120,12 +120,13 @@ export const tokens = (mode: ColorMode) => ({
         },
       }),
 });
+const isMobile = () => window.innerWidth <= 600; // Adjust the width threshold as needed
 
 // mui theme settings
 export const themeSettings = (mode: ColorMode) => {
   const colors = tokens(mode);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const theme = useTheme();
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return {
     palette: {
@@ -168,30 +169,30 @@ export const themeSettings = (mode: ColorMode) => {
     },
     typography: {
       fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-      fontSize: 12,
+      fontSize: isMobile()?10:12,
       h1: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 32 : 40,
+        fontSize: isMobile() ? 30 : 40,
       },
       h2: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 24 : 32,
+        fontSize: isMobile() ? 22 : 32,
       },
       h3: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 20 : 24,
+        fontSize: isMobile() ? 18 : 24,
       },
       h4: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 16 : 20,
+        fontSize: isMobile() ? 14 : 20,
       },
       h5: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 14 : 16,
+        fontSize: isMobile() ? 12 : 16,
       },
       h6: {
         fontFamily: ["Source Sans Pro", "sans-serif"].join(","),
-        fontSize: isMobile ? 12 : 14,
+        fontSize: isMobile() ? 10 : 14,
       }
     },
   };

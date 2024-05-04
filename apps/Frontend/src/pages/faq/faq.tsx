@@ -13,7 +13,7 @@ const FAQ = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
+    <Box mr={isMobile ? "1vw" : "2c0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
       <Header title="FAQ" subtitle="Frequently Asked Questions Page" />
 
       <Accordion defaultExpanded>

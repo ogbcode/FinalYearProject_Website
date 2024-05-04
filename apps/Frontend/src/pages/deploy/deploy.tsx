@@ -112,6 +112,7 @@ const Deploy = () => {
   const checkoutSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     description: yup.string().required("Bot description is required"),
+    subscription_benefits: yup.string().required("Subscription benefits is required"),
     adminId: yup
       .number()
       .typeError("Telegram Id must be a number")
@@ -189,8 +190,8 @@ const Deploy = () => {
     }),
     ...(isCryptoCheckBoxActive && {
       crypto_address: yup.object().shape({
-        btc_address: yup.string().required("Binance API Key is required"),
-        usdt_address: yup.string().required("Binance Secret Key is required"),
+        btc_address: yup.string().required("Bitcoin address is required"),
+        usdt_address: yup.string().required("Usdt address is required"),
       }),
     }),
   });
@@ -354,6 +355,7 @@ const Deploy = () => {
               />
               <TextField
                 fullWidth
+                multiline
                 variant="filled"
                 type="text"
                 label="Subscription Benefits"
@@ -823,7 +825,7 @@ const Deploy = () => {
                   ) : (
                     <Typography variant="body1">
                       {deployStatus === "success"
-                        ? "Your bot has been deployed successfully\nGo to manage to see your bot details!"
+                        ? "Your bot has been built successfully and is currently deploying⚡️.\nYou will get a text from your bot once the deployment is complete"
                         : "There was an error deploying your bot."}
                     </Typography>
                   )}
@@ -883,7 +885,7 @@ const initialValues = {
     btc_address: "",
     usdt_address: "",
   },
-  subscription_benefits: "Exclusive VIP Group access⚡️",
+  subscription_benefits: "",
 };
 
 export default Deploy;

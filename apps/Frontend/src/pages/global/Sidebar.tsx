@@ -56,7 +56,7 @@ const Sidebar = () => {
 
 
   return (
-    <Box
+    <Box zIndex={"999"}
       sx={{
         "& .pro-sidebar-inner": {
           background: `${colors.primary[400]} !important`,

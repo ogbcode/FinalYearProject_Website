@@ -61,20 +61,20 @@ const Manage = () => {
     {
       field: "deployment.domain",
       headerName: "Domain",
-      flex: 1,
+      flex: 2,
       valueGetter: (params: any) => params.row.deployment?.domain || "", // Access nested property safely
     },
     {
       field: "success_url",
-      headerName: "Groupchat Link",
+      headerName: "Success Url",
       flex: 1,
     },
 
-    {
-      field: "customersupport_telegram",
-      headerName: "Support",
-      flex: 1,
-    },
+    // {
+    //   field: "customersupport_telegram",
+    //   headerName: "Support",
+    //   flex: 1,
+    // },
 
     {
       field: "createdAt",
@@ -174,7 +174,7 @@ const Manage = () => {
           columns={columns}
           components={{ Toolbar: GridToolbar }}
           sx={{
-            fontSize:isMobile?"9px":undefined
+            fontSize:isMobile?"9px":"12px"
           }}
         />
       </Box>

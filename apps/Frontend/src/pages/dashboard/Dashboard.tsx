@@ -107,7 +107,7 @@ const Dashboard = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await response.text();
-        console.log(data);
+
         setTransactionCount(data);
         return data;
       } catch (error) {

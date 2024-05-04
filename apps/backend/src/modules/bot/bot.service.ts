@@ -48,7 +48,7 @@ export class BotService {
     return result;
   }
 
-  async set_webhook(url: string, apiKey: string): Promise<string | undefined> {
+  async set_webhook(url: string, apiKey: string): Promise<any | undefined> {
     try {
       const stripe = new Stripe(apiKey);
 
@@ -56,10 +56,21 @@ export class BotService {
         enabled_events: ['checkout.session.completed', 'charge.failed'],
         url: url,
       });
-      return webhook.secret;
+
+      return {"webhook_secret":webhook.secret,"id":webhook.id};
     } catch (e) {
-      console.error('Error creating webhook endpoint:', e);
+      // console.error('Error creating webhook endpoint:', e);
       return undefined; // You can modify this return value based on your error handling strategy
+    }
+  }
+  async deleteStripeWebhook(apiKey,webhookId){
+    try{
+    const stripe = new Stripe(apiKey);
+    await stripe.webhookEndpoints.del(webhookId)
+    return true
+    }
+    catch(e){
+      return false
     }
   }
 
@@ -79,11 +90,13 @@ export class BotService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    createBotDto.binance.binance_publickey =
-      await this.encryptionService.binancePublicKey(
-        createBotDto.binance.binance_apikey,
-        createBotDto.binance.binance_secretkey,
-      );
+    if (createBotDto.binance) {
+      createBotDto.binance.binance_publickey =
+        await this.encryptionService.binancePublicKey(
+          createBotDto.binance.binance_apikey,
+          createBotDto.binance.binance_secretkey,
+        );
+    }
 
     const botProps: Partial<Bot> = {
       ...createBotDto,
@@ -145,22 +158,28 @@ export class BotService {
       );
       newBot.deployment = deployedbot;
       const botDomain = deployedbot.domain;
-      const webhooksecret = await this.set_webhook(
-        'https://' + botDomain + '/stripe',
-        createBotDto.stripe.stripe_apikey,
-      );
+      
+      const setwebhook = createBotDto.stripe
+        ? await this.set_webhook(
+            botDomain + '/stripe',
+            createBotDto.stripe.stripe_apikey,
+          )
+        : '';
+      const webhooksecret=setwebhook?.webhook_secret
+      const webhookId=setwebhook?.id
       const stripeUpdate = createBotDto.stripe?.stripe_apikey
         ? {
             stripe: {
               stripe_apikey: createBotDto.stripe.stripe_apikey,
               stripe_secret: webhooksecret,
+              stripe_webhookid:webhookId
             },
           }
         : null;
       await this.botRepository.save(newBot);
       await this.update(newBot.id, stripeUpdate);
-
-      return { 'deployment succesfull': deployedbot };
+      // return { 'deployment succesfull': deployedbot };
+      return { message: 'deployment succesfull' };
     } catch (error) {
       console.error('Error creating bot:', error);
       throw new Error('Failed to create bot');
@@ -281,6 +300,11 @@ export class BotService {
   async remove(id: string): Promise<{ success: boolean; message: string }> {
     const deployment = await this.findOne(id);
     await this.deploymentService.deleteService(deployment.deployment.serviceId);
+    const stripe=deployment.stripe
+    const decryptedStripe=JSON.parse(await this.encryptionService.decryptData(stripe))
+    const stripeApikey=decryptedStripe.stripe_apikey
+    const stripeWebhook=decryptedStripe.stripe_webhookid
+    await this.deleteStripeWebhook(stripeApikey,stripeWebhook)
     const result = await this.botRepository.delete(id);
     if (result.affected > 0) {
       return { success: true, message: 'delete succesfull' };
