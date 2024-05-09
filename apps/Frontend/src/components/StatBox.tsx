@@ -38,7 +38,7 @@ const StatBox = ({
         </Box>
       </Box>
       <Box display="flex" justifyContent="space-between" mt="2px">
-        <Typography fontSize={isMobile?"10px":undefined} variant={isMobile ? "subtitle2" : "subtitle1"} sx={{ color: colors.greenAccent[500] }}> {/* Conditional font size based on isMobile */}
+        <Typography fontSize={isMobile?"10.2px":undefined} variant={isMobile ? "subtitle2" : "subtitle1"} sx={{ color: colors.greenAccent[500] }}> {/* Conditional font size based on isMobile */}
           {subtitle}
         </Typography>
         <Typography

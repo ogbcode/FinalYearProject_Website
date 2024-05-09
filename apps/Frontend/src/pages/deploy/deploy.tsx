@@ -196,7 +196,7 @@ const Deploy = () => {
     }),
   });
   return (
-    <Box mr={isMobile ? "2vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
+    <Box mr={isMobile ? "2vw" : "0.5vw"} ml={isMobile ? "1vw" : "17.5vw"}>
       <Header title="CREATE BOT" subtitle="Create and deploy a new bot" />
 
       <Formik
@@ -393,8 +393,9 @@ const Deploy = () => {
                     Bank payment methods
                   </Typography>
                 </Box>
-                <Box>
-                  <Box display="flex" flexDirection={"row"} marginBottom="20px">
+                <Box >
+                  <Box display="flex" flexDirection={"row"} marginBottom="20px" 
+                  >
                     <Box sx={{ alignItems: "center" }}>
                       <Checkbox
                         onClick={() => {

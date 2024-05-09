@@ -5,6 +5,7 @@ import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../auth/Auth";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -12,6 +13,7 @@ const Topbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout} = useAuth()
 
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
@@ -22,7 +24,7 @@ const Topbar = () => {
   };
 
   const handleLogout = () => {
-
+    logout()
     navigate("/login");
     localStorage.removeItem('userId');
     localStorage.removeItem('firstName');

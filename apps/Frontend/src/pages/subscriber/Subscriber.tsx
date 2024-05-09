@@ -69,15 +69,15 @@ const Subscriber = () => {
       },
     },
     
-    {
-      field: "createdAt",
-      headerName: "Date Created",
-      flex: 1,
-      valueGetter: (params:any) => {
-        const date = new Date(params.value);
-        return date.toISOString().split("T")[0];
-      },
-    },
+    // {
+    //   field: "createdAt",
+    //   headerName: "Date Created",
+    //   flex: 1,
+    //   valueGetter: (params:any) => {
+    //     const date = new Date(params.value);
+    //     return date.toISOString().split("T")[0];
+    //   },
+    // },
 
   ];
   useEffect(() => {
@@ -101,7 +101,7 @@ const Subscriber = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "17.5vw" : "17.5vw"}>
+    <Box mr={isMobile ? "1vw" : "0.5vw"} ml={isMobile ? "1vw" : "17.5vw"}>
       <Header
         title="SUBSCRIBERS"
         subtitle="List of paid subscribers"
@@ -136,6 +136,37 @@ const Subscriber = () => {
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
           },
+          
+          "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell": {
+            borderBottom: `1px solid ${colors.grey[400]}`, // Add a border to separate cells
+            padding: "4px", // Add padding to column headers and cells
+          },
+          ...(isMobile && {
+            "& .MuiDataGrid-columnHeader": {
+              backgroundColor: colors.blueAccent[700],
+              whiteSpace: "normal",
+              overflow: "hidden", 
+              textOverflow: "ellipsis",
+            },
+            '@media (hover: none)': {
+              '&& .MuiDataGrid-menuIcon': {
+                width: 0,
+                visibility: 'hidden',
+              },
+              '&& .MuiDataGrid-sortIcon': {
+                width: 0,
+                visibility: 'hidden',
+              }
+            },
+            '&& .MuiDataGrid-columnHeader--sorted .MuiDataGrid-menuIcon': {
+              width: '25px',
+              visibility: 'visible',
+            },
+            '&& .MuiDataGrid-columnHeader--sorted .MuiDataGrid-sortIcon': {
+              width: 'auto',
+              visibility: 'visible',
+            }
+          }),
         }}
       >
         <DataGrid

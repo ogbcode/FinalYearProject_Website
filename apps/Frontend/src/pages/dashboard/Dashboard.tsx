@@ -210,7 +210,7 @@ const Dashboard = () => {
     <Box
       width={isMobile ? "100vw" : "81vw"}
       mr={isMobile ? "1vw" : "0.5vw"}
-      ml={isMobile ? "17.5vw" : "17.5vw"}
+      ml={isMobile ? "1vw" : "17.5vw"}
     >
       {/* HEADER */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -284,13 +284,14 @@ const Dashboard = () => {
             backgroundColor: colors.primary[400],
             display: "flex",
             alignItems: "center",
+            // fontSize:"1px",
             justifyContent: "center",
             borderRadius: "10px",
           }}
         >
           <StatBox
             title={subscribersCount}
-            subtitle="Group Subscribers"
+            subtitle="Subscribers"
             progress="1"
             increase="+100%"
             isMobile={isMobile}

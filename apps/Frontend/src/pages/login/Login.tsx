@@ -15,9 +15,10 @@ import {
 } from "@mui/material";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
+// import { useAuth } from "../auth/Auth";
 // import { AuthContext } from "../store/interfaces/auth";
 
-export const loadUser = async (token: any) => {
+export const loadUser = async (token: any):Promise<boolean> => {
   try {
     const response = await fetch(`${BASE_URL}/users/user/verify`, {
       method: "GET",
@@ -28,7 +29,8 @@ export const loadUser = async (token: any) => {
     });
 
     if (response.status !== 200) {
-      throw new Error("Failed to fetch user data");
+      return false
+      // throw new Error("Failed to fetch user data");
     }
 
     const userData = await response.json();
@@ -39,8 +41,8 @@ export const loadUser = async (token: any) => {
     return true;
   } catch (error) {
     console.error(error);
-
-    throw new Error("Failed to load user data" + error);
+    // throw new Error("Failed to load user data" + error);
+    return false
   }
 };
 
@@ -51,6 +53,7 @@ const Login = () => {
   const [isLoginLoading, setIsLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState(""); // State for login error
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const {isLoggedIn, login } = useAuth()
 
   // const colors = tokens(theme.palette.mode);
   const navigate = useNavigate();
@@ -61,7 +64,7 @@ const Login = () => {
     password: Yup.string().required("Insert your password"),
   });
 
-  const login = async (credentials: LoginProps) => {
+  const send_login = async (credentials: LoginProps) => {
     try {
       const response = await fetch(BASE_URL + "/auth/login", {
         method: "POST",
@@ -87,10 +90,11 @@ const Login = () => {
   const handleLogin = useCallback(async (props: LoginProps) => {
     try {
       setIsLoginLoading(true);
-      const response = await login(props);
+      const response = await send_login(props);
       if (response.access_token) {
         localStorage.setItem("token", response.access_token);
         await loadUser(response.access_token);
+
         navigate("/dashboard");
       } else {
         throw new Error("No access token");

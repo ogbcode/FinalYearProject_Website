@@ -3,7 +3,7 @@ import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import Topbar from "./pages/global/Topbar";
 import Dashboard from "./pages/dashboard/Dashboard";
-import Login from "./pages/login/Login";
+import Login, { } from "./pages/login/Login";
 import Sales from "./pages/sales/Sales";
 import Sidebar from "./pages/global/Sidebar";
 import Deploy from "./pages/deploy/deploy";
@@ -13,8 +13,13 @@ import Customers from "./pages/customer/Customer";
 import Subscriber from "./pages/subscriber/Subscriber";
 import Manage from "./pages/manage/Manage";
 import HomePage from "./pages/home/Home";
+import { AuthProvider } from "./pages/auth/Auth";
+
+
 
 function App() {
+  // const isLoggedIn =loadUser( localStorage.getItem('token'));
+  // const { isLoggedIn } = useAuth();
   const [theme, colorMode] = useMode();
   const Layout = () => {
     return (
@@ -43,8 +48,10 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <BrowserRouter>
+        <AuthProvider>
           <Routes>
             <Route element={<Layout />}>
+            {/* <Route path="/dashboard"  element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />} /> */}
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/deploy" element={<Deploy />} />
               <Route path="/faq" element={<FAQ />} />
@@ -59,6 +66,7 @@ function App() {
             </Route>
             <Route path="/" element={<HomePage/>} />
           </Routes>
+          </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
     </ColorModeContext.Provider>

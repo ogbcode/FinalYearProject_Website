@@ -77,13 +77,13 @@ export class BotService {
   async create(createBotDto: CreateBotDto) {
     // Check if a bot already exists for the given group chat ID
     // console.log(createBotDto)
-    const existingBot = await this.botRepository.findOneBy({
-      groupchatId: createBotDto.groupchatId,
-    });
+    // const existingBot = await this.botRepository.findOneBy({
+    //   groupchatId: createBotDto.groupchatId,
+    // });
 
-    if (existingBot) {
-      throw new Error('A Bot already exists for this group');
-    }
+    // if (existingBot) {
+    //   throw new Error('A Bot already exists for this group');
+    // }
 
     // Find the user by ID
     const user = await this.userService.findOneById(createBotDto.userId);

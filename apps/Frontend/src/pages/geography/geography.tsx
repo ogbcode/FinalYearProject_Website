@@ -9,7 +9,7 @@ const Geography = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <Box mr={isMobile ? "2vw" : "0.5vw"} ml={isMobile ? "17vw" : "17.5vw"} color="black">
+    <Box mr={isMobile ? "2vw" : "0.5vw"} ml={isMobile ? "1vw" : "17.5vw"} color="black">
       <Header title="Geography" subtitle="Geography Chart of your customers" />
       <Box
         height={isMobile? "70vh":"90vh"}
