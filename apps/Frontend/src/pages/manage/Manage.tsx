@@ -151,8 +151,8 @@ const Manage = () => {
           },
           
           "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell": {
-            borderBottom: `1px solid ${colors.grey[400]}`, // Add a border to separate cells
-            padding: "5px", // Add padding to column headers and cells
+            borderBottom: `1px solid ${colors.grey[500]}`, // Add a border to separate cells
+            padding: "7px", // Add7 padding to column headers and cells
           },
           ...(isMobile && {
             "& .MuiDataGrid-columnHeader": {

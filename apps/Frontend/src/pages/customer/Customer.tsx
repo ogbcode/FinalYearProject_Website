@@ -102,7 +102,7 @@ const Customers = () => {
           
           "& .MuiDataGrid-columnHeader, & .MuiDataGrid-cell": {
             borderBottom: `1px solid ${colors.grey[400]}`, // Add a border to separate cells
-            padding: "5px", // Add padding to column headers and cells
+            padding: "6px", // Add padding to column headers and cells
           },
           ...(isMobile && {
             "& .MuiDataGrid-columnHeader": {
