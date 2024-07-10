@@ -4,7 +4,7 @@ import { ErrorFilter } from './filters/error.filters';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { RequestLoggerMiddleware } from './utils/request-logger.middleware';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+import { join } from 'path'; 
 import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { utilities as nestWinstonModuleUtilities, WinstonModule } from 'nest-winston';

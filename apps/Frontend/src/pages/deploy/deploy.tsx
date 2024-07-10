@@ -795,6 +795,7 @@ const Deploy = () => {
                 color="secondary"
                 type="submit"
                 disabled={isDeployLoading}
+                sx={{m:"10px",mb:"30px"}}
               >
                 {isDeployLoading ? "Creating..." : "Create New Bot"}
               </Button>
