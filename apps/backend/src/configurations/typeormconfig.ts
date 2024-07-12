@@ -15,7 +15,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   extra: {
     charset: 'utf8mb4_unicode_ci',
   },
-  synchronize:false, // Auto-create database tables based on entities (not recommended for production)
+  synchronize:true, // Auto-create database tables based on entities (not recommended for production)
   autoLoadEntities: true, // Automatically load entity files
   logging: false, // Disable logging SQL queries
  
