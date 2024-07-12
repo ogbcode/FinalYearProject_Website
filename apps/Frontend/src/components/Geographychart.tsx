@@ -65,7 +65,7 @@ const projectionTranslation = isMobile
 
 return (
   <ResponsiveChoropleth
-    data={data}
+    data={parsedTransactions}
     colors="blues"
     theme={{
       axis: {
